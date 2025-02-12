@@ -7,10 +7,13 @@ import CartPage from './Pages/CartPage.js';
 import AccountPage from './Pages/AccountPage.js';
 import ListingsPage from './Pages/ListingsPage.js';
 import CheckoutPage from './Pages/CheckoutPage.js';
+import TaskBar from './Components/TaskBar.js';
+import Footer from './Components/Footer.js';
 
 function App() {
   return (
     <div className="main-container">
+      <TaskBar/>
       <Routes>
           <Route path="/" element={<HomePage/>} />
           <Route path="/cart" element={<CartPage/>}/>
@@ -19,6 +22,7 @@ function App() {
           <Route path ="/listings" element={<ListingsPage/>}/>
           <Route path="/*" element={<ErrorPage/>} />
       </Routes>
+      <Footer/>
     </div>
   );
 }

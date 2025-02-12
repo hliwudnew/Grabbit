@@ -1,0 +1,40 @@
+.TaskBar{
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.TaskBar-content{
+    display: flex;
+    padding-top: 2mm;
+    padding-bottom: 2mm;
+    padding-left: 1%;
+    padding-right: 1%;
+    justify-content: center;
+}
+
+.TaskBar-logo{
+    float: left;
+    width: 33.3%;
+}
+
+.TaskBar-pages{
+    display: flex;
+    float: left;
+    width: 33.3%;
+    padding-left: 1%;
+    padding-right: 1%;
+    text-align: center;
+    margin: auto;
+    margin-bottom: 0%;
+    justify-content: center;
+}
+
+.TaskBar-profile{
+    float: right;
+    width: 33.3%;
+    text-align: right;
+    margin: auto;
+}
+
+.page{
+    padding: 1%;
+}
