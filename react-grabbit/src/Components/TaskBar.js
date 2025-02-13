@@ -1,4 +1,11 @@
 import "../Styles/TaskBar.css";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import IconButton from '@mui/material/IconButton';
+import PersonIcon from '@mui/icons-material/Person';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import SearchIcon from '@mui/icons-material/Search';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import {useNavigate } from "react-router-dom";
 
 function TaskBar(){
@@ -13,13 +20,19 @@ const navigate = useNavigate();
                 </div>
                 <div className="TaskBar-pages">
                     <button>DropDown</button>
-                    <input></input>
-                    <button onClick={() => navigate("/listings")} className = "page">Search</button>
+                    <TextField style={{width:"100%"}} variant="outlined"></TextField>
+                    <Button style={{color:"black",borderColor:"black"}} variant="outlined" onClick={() => navigate("/listings")} className = "page">{<SearchIcon/>}</Button>
                 </div>
                 <div className="TaskBar-profile">
-                    <button onClick={() => navigate("/notifications")}>Notifications</button>
-                    <button onClick={() => navigate("/account")}>Account</button>
-                    <button onClick={() => navigate("/cart")}>Cart</button>
+                    <IconButton onClick={() => navigate("/notifications")}>
+                        <NotificationsIcon/>
+                    </IconButton>
+                    <IconButton onClick={() => navigate("/cart")}>
+                        <ShoppingCartIcon/>
+                    </IconButton>
+                    <IconButton onClick={() => navigate("/account")}>
+                        <PersonIcon/>
+                    </IconButton>
                 </div>
             </div>
         </div>
