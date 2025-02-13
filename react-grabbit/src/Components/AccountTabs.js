@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Tabs,Tab, Button, TextField } from "@mui/material";
 import Box from '@mui/material/Box';
-
+import "../Styles/AccountTabs.css";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -50,30 +50,52 @@ export default function BasicTabs() {
       </Box>
       <CustomTabPanel value={value} index={0}>
         <div className='AccountInfo-container'>
-            <div className='AccountInfo-inputs'> 
+            <div className='AccountInfo-inputs'>
+              <div>
                 <h3>First Name</h3>
-                <TextField/>
+                <TextField style={{width:"100%"}}/>
+              </div>
+              <div>
                 <h3>Last Name</h3>
-                <TextField/>
-                <h3>Email Name</h3>
-                <TextField/>
+                <TextField style={{width:"100%"}}/>
+              </div>
+              <div>
+                <h3>Email Address</h3>
+                <TextField style={{width:"100%"}}/>
+              </div>
             </div>
-            <Button>Save Changes</Button>
+            <div className='AccountInfo-password'>
+                <h3>Password Changes</h3>
+                <TextField label="Current Password"/>
+                <TextField label ="New Password"/>
+                <TextField label ="Confirm New Password"/>
+            </div>
         </div>
+        <Button>Save Changes</Button>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <div className='ShippingInfo-container'>
             <div className='ShippingInfo-inputs'> 
+              <div>
                 <h3>Street Address</h3>
-                <TextField/>
+                <TextField style={{width:"100%"}}/>
+              </div>
+              <div>
                 <h3>Apartment# (Optional)</h3>
-                <TextField/>
+                <TextField style={{width:"100%"}}/>
+              </div>
+              <div>
                 <h3>City/Town</h3>
-                <TextField/>
+                <TextField style={{width:"100%"}}/>
+              </div>
+              <div>
                 <h3>Zip</h3>
-                <TextField/>
+                <TextField style={{width:"100%"}}/>
+              </div>
+              <div>
                 <h3>Phone Number</h3>
-                <TextField/>
+                <TextField style={{width:"100%"}}/>
+              </div>
             </div>
             <Button>Save Changes</Button>
         </div>

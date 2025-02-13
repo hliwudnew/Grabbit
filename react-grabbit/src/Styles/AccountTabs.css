@@ -1,0 +1,32 @@
+.AccountInfo-container{
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 80%;
+}
+.AccountInfo-inputs{
+    display: grid;
+    grid-template-columns: 40% 40%;
+    justify-content: center;
+    text-align: left;
+    gap: 10%;
+    margin-bottom: 10%;
+}
+.AccountInfo-password{
+    display: grid;
+    text-align: left;
+    margin-bottom: 5%;
+}
+
+
+.ShippingInfo-container{
+
+}
+
+.ShippingInfo-inputs{
+    display: grid;
+    grid-template-columns: 40% 40%;
+    justify-content: center;
+    text-align: left;
+    gap: 10%;
+    margin-bottom: 10%;
+}
