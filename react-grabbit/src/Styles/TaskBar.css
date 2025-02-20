@@ -15,6 +15,10 @@
 .TaskBar-logo{
     float: left;
     width: 33.3%;
+    display: flex;
+    align-items: center;
+    color: #685BE0;
+    font-family: 'Dela Gothic One';
 }
 
 .TaskBar-pages{

@@ -16,7 +16,8 @@ const navigate = useNavigate();
         <div className="TaskBar">
             <div className="TaskBar-content">
                 <div className="TaskBar-logo">
-                    <img style={{width:"5.5rem", height: "5rem", cursor:"pointer"}} onClick={() => navigate("/")} src ="./grabbit-cut.png" alt = "logo"></img>
+                    <img style={{width:"3.5rem", height: "3.5rem", cursor:"pointer"}} onClick={() => navigate("/")} src ="./grabbit-cut.png" alt = "logo"></img>
+                    <h1>Grabbit</h1>
                 </div>
                 <div className="TaskBar-pages">
                     <button>DropDown</button>
