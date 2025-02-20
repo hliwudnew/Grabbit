@@ -9,6 +9,9 @@ import ListingsPage from './Pages/ListingsPage.js';
 import CheckoutPage from './Pages/CheckoutPage.js';
 import TaskBar from './Components/TaskBar.js';
 import Footer from './Components/Footer.js';
+import LoginPage from './Pages/LoginPage.js';
+import CreateAccountPage from './Pages/CreateAccountPage.js';
+import NotificationsPage from './Pages/NotificationsPage.js';
 
 function App() {
   return (
@@ -20,6 +23,9 @@ function App() {
           <Route path="/checkout" element={<CheckoutPage/>}/>
           <Route path="/account" element={<AccountPage/>}/>
           <Route path ="/listings" element={<ListingsPage/>}/>
+          <Route path ="/login" element={<LoginPage/>}/>
+          <Route path ="/create-account" element={<CreateAccountPage/>}/>
+          <Route path ="/notifications" element={<NotificationsPage/>}/>
           <Route path="/*" element={<ErrorPage/>} />
       </Routes>
       <Footer/>

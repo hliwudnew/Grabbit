@@ -1,4 +1,9 @@
 .AccountPage-content{
+    height: 100vh;
+}
+
+.AccountPage-holder{
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
     text-align: center;
     margin-top: 2%;
     margin-bottom: 2%;
@@ -6,11 +11,6 @@
     margin-right: 15%;
     background-color: white;
     border-radius: 5%;
-}
-
-.AccountPage-holder{
-    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-    border-radius: inherit;
 }
 
 .AccountPage-details{
