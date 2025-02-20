@@ -2,6 +2,7 @@
     display: grid;
     justify-content: center;
     grid-template-columns: 80%;
+    color: #685BE0;
 }
 .AccountInfo-inputs{
     display: grid;
@@ -15,11 +16,12 @@
     display: grid;
     text-align: left;
     margin-bottom: 5%;
+    row-gap: 5%;
 }
 
 
 .ShippingInfo-container{
-
+    color: #685BE0;
 }
 
 .ShippingInfo-inputs{
@@ -29,4 +31,20 @@
     text-align: left;
     gap: 10%;
     margin-bottom: 10%;
+}
+
+.PaymentInfo-container{
+    color: #685BE0;
+}
+
+.PaymentInfo-inputs{
+    margin-bottom: 5%;
+}
+
+.account-btn{
+
+}
+
+.account-input{
+    background-color: rgba(104, 91, 224, 0.15);
 }

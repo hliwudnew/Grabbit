@@ -10,7 +10,6 @@ function AccountPage(){
             <div className="AccountPage-holder">
                 <AccountTabs/>
             </div>
-            <p>Account Page</p>
         </div>
     );
 }

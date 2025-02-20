@@ -42,10 +42,10 @@ export default function BasicTabs() {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' ,justifyContent:"center",display:"flex"}}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Account Info" {...a11yProps(0)} />
-          <Tab label="Shipping Info" {...a11yProps(1)} />
-          <Tab label="Payment Info" {...a11yProps(2)} />
+        <Tabs TabIndicatorProps={{sx:{backgroundColor:"#685BE0",height:2}}} value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tab  style={{color:"#685BE0"}} label="Account Info" {...a11yProps(0)} />
+          <Tab style={{color:"#685BE0"}} label="Shipping Info" {...a11yProps(1)} />
+          <Tab style={{color:"#685BE0"}} label="Payment Info" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -53,62 +53,62 @@ export default function BasicTabs() {
             <div className='AccountInfo-inputs'>
               <div>
                 <h3>First Name</h3>
-                <TextField style={{width:"100%"}}/>
+                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' style={{width:"100%"}}/>
               </div>
               <div>
                 <h3>Last Name</h3>
-                <TextField style={{width:"100%"}}/>
+                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' style={{width:"100%"}}/>
               </div>
               <div>
                 <h3>Email Address</h3>
-                <TextField style={{width:"100%"}}/>
+                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' style={{width:"100%"}}/>
               </div>
             </div>
             <div className='AccountInfo-password'>
                 <h3>Password Changes</h3>
-                <TextField label="Current Password"/>
-                <TextField label ="New Password"/>
-                <TextField label ="Confirm New Password"/>
+                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' label="Current Password"/>
+                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' label ="New Password"/>
+                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' label ="Confirm New Password"/>
             </div>
         </div>
-        <Button>Save Changes</Button>
+        <Button style={{backgroundColor:"#685BE0"}} variant='contained'>Save Changes</Button>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <div className='ShippingInfo-container'>
             <div className='ShippingInfo-inputs'> 
               <div>
                 <h3>Street Address</h3>
-                <TextField style={{width:"100%"}}/>
+                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' style={{width:"100%"}}/>
               </div>
               <div>
                 <h3>Apartment# (Optional)</h3>
-                <TextField style={{width:"100%"}}/>
+                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' style={{width:"100%"}}/>
               </div>
               <div>
                 <h3>City/Town</h3>
-                <TextField style={{width:"100%"}}/>
+                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' style={{width:"100%"}}/>
               </div>
               <div>
                 <h3>Zip</h3>
-                <TextField style={{width:"100%"}}/>
+                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' style={{width:"100%"}}/>
               </div>
               <div>
                 <h3>Phone Number</h3>
-                <TextField style={{width:"100%"}}/>
+                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' style={{width:"100%"}}/>
               </div>
             </div>
-            <Button>Save Changes</Button>
+            <Button style={{backgroundColor:"#685BE0"}} variant='contained'>Save Changes</Button>
         </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         <div className='PaymentInfo-container'>
             <div className='PaymentInfo-inputs'> 
                 <h3>DebitCard</h3>
-                <TextField defaultValue="1234 **** **** ****"/>
+                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' defaultValue="1234 **** **** ****"/>
                 <h3>Creditcard</h3>
-                <TextField defaultValue="1234 **** **** ****"/>
+                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' defaultValue="1234 **** **** ****"/>
             </div>
-            <Button>Save Changes</Button>
+            <Button style={{backgroundColor:"#685BE0"}} variant='contained'>Save Changes</Button>
         </div>
       </CustomTabPanel>
     </Box>
