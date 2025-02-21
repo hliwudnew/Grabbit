@@ -1,3 +1,27 @@
 .CartPage-content{
     text-align: center;
 }
+
+.CartPage-holder{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.CartPage-Cart{
+    width: 50%;
+}
+
+.CartPage-Summary{
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    width: 25%;
+    background-color: white;
+    margin: 5%;
+    text-align: left;
+    display: grid;
+}
+
+.CartPage-header{
+    text-align: left;
+    margin-left: 5%;
+    justify-content: left;
+}

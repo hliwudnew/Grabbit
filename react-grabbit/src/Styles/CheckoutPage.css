@@ -1,3 +1,23 @@
+
 .CheckoutPage-content{
     text-align: center;
+}
+
+.CheckoutPage-holder{
+    display: flex;
+    justify-content: space-evenly;
+    margin: 5%;
+}
+
+.CheckoutPage-Billing{
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    background-color: white;
+    padding: 2.5%;
+    width: 25%;
+}
+
+.CheckoutPage-Confirm{
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    background-color: white;
+    padding: 2.5%;
 }
