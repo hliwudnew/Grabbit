@@ -1,5 +1,7 @@
 // server.js
 require('dotenv').config();
+// Register the User model so Mongoose knows about it
+require('./models/user');
 const express = require('express');
 const connectDB = require('./config/db');
 const itemRoutes = require('./routes/itemRoutes');

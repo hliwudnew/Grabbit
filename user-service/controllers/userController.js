@@ -62,3 +62,36 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+// Add a notification for a user
+exports.addNotification = async (req, res) => {
+  try {
+    const { userId, message } = req.body;
+    if (!userId || !message) {
+      return res.status(400).json({ message: 'userId and message are required.' });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+    // Push a new notification into the notifications array
+    user.notifications.push({ message });
+    await user.save();
+    res.status(200).json({ message: 'Notification added successfully.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Get notifications for the authenticated user
+exports.getNotifications = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('notifications');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+    res.json(user.notifications);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
