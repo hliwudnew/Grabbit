@@ -7,7 +7,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useNavigate } from "react-router-dom";
-
+import MessageIcon from '@mui/icons-material/Message';
 function TaskBar(){
 //Hook state, for naviation
 const navigate = useNavigate();
@@ -25,6 +25,9 @@ const navigate = useNavigate();
                     <Button style={{color:"black",borderColor:"black"}} variant="outlined" onClick={() => navigate("/listings")} className = "page">{<SearchIcon/>}</Button>
                 </div>
                 <div className="TaskBar-profile">
+                    <IconButton onClick={() => navigate("/messages")}>
+                        <MessageIcon/>
+                    </IconButton>
                     <IconButton onClick={() => navigate("/notifications")}>
                         <NotificationsIcon/>
                     </IconButton>

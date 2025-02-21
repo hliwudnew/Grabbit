@@ -12,6 +12,7 @@ import Footer from './Components/Footer.js';
 import LoginPage from './Pages/LoginPage.js';
 import CreateAccountPage from './Pages/CreateAccountPage.js';
 import NotificationsPage from './Pages/NotificationsPage.js';
+import MessagesPage from './Pages/MessagesPage.js';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path ="/login" element={<LoginPage/>}/>
           <Route path ="/create-account" element={<CreateAccountPage/>}/>
           <Route path ="/notifications" element={<NotificationsPage/>}/>
+          <Route path ="/messages" element={<MessagesPage/>}/>
           <Route path="/*" element={<ErrorPage/>} />
       </Routes>
       <Footer/>
