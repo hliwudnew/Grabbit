@@ -1,12 +1,13 @@
-import { TextField } from "@mui/material";
+import { TextField, Button } from "@mui/material";
 import "../Styles/CheckoutPage.css"
+import CheckoutTile from "../Components/CheckoutTile";
 function CheckoutPage(){
 
     return(
         <div className="CheckoutPage-content">
             <div className="CheckoutPage-holder">
                 <div className="CheckoutPage-Billing">
-                    <h1>Billing Info</h1>
+                    <h1>Billing Information</h1>
                     <TextField style={{marginBottom:"5%"}} label="Full Name" variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
                     <TextField style={{marginBottom:"5%"}} label="Street Address" variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
                     <TextField style={{marginBottom:"5%"}} label="Apartment#" variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
@@ -16,10 +17,27 @@ function CheckoutPage(){
                     <TextField style={{marginBottom:"5%"}} label="Email" variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
                 </div>
                 <div className="CheckoutPage-Confirm">
-                    <p>Item</p>
-                    <p>Item</p>
-                    <p>Item</p>
-                    <p>Item</p>
+                    <div className="CheckoutPage-items">
+                        <CheckoutTile/>
+                        <CheckoutTile/>
+                        <CheckoutTile/>
+                    </div>
+                    <div>
+                        <h1>Credit Card Information</h1>
+                    </div>
+                    <div className="CheckoutPage-payment">
+                        <TextField label="Cardholder Name" variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
+                        <TextField label="Digits" variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
+                        <TextField label="Expiration" variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
+                        <TextField label="CVC" variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
+                    </div>
+                    <div style={{textAlign:"left"}}>
+                        <hr/>
+                        <h1>Total: $17.75</h1>
+                        <div style={{textAlign:"center"}}>
+                            <Button style={{backgroundColor:"#685BE0"}} variant="contained">Proccess Order</Button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
