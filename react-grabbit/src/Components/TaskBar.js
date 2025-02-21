@@ -21,7 +21,7 @@ const navigate = useNavigate();
                 </div>
                 <div className="TaskBar-pages">
                     <button>DropDown</button>
-                    <TextField style={{width:"100%"}} variant="outlined"></TextField>
+                    <TextField size="small" style={{width:"100%"}} variant="outlined"></TextField>
                     <Button style={{color:"black",borderColor:"black"}} variant="outlined" onClick={() => navigate("/listings")} className = "page">{<SearchIcon/>}</Button>
                 </div>
                 <div className="TaskBar-profile">
