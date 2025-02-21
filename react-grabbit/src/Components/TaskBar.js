@@ -31,7 +31,7 @@ const navigate = useNavigate();
                     <IconButton onClick={() => navigate("/cart")}>
                         <ShoppingCartIcon/>
                     </IconButton>
-                    <IconButton onClick={() => navigate("/account")}>
+                    <IconButton onClick={() => navigate("/login")}>
                         <PersonIcon/>
                     </IconButton>
                 </div>
