@@ -9,6 +9,11 @@ const itemSchema = new mongoose.Schema(
     seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     buyer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     purchased: { type: Boolean, default: false },
+    category: { 
+      type: String, 
+      required: true, 
+      enum: ['electronics', 'clothing', 'books', 'furniture'] 
+    }
   },
   { timestamps: true }
 );

@@ -1,3 +1,4 @@
+// routes/itemRoutes.js
 const express = require('express');
 const router = express.Router();
 const {
@@ -6,19 +7,22 @@ const {
   getItemById,
   purchaseItem,
   getSellerItems,
-  getBuyerItems
+  getBuyerItems,
+  searchItems  
 } = require('../controllers/itemController');
 const { protect } = require('../middleware/auth');
 
-// Place static routes first
-router.get('/seller/myitems', protect, getSellerItems);
-router.get('/buyer/myitems', protect, getBuyerItems);
+// New search endpoint: GET /api/items/search
+router.get('/search', searchItems);
 
-// Then your general routes
+// Existing public endpoints
 router.get('/', getItems);
 router.get('/:id', getItemById);
 
+// Existing protected endpoints
 router.post('/', protect, createItem);
 router.post('/:id/purchase', protect, purchaseItem);
+router.get('/seller/myitems', protect, getSellerItems);
+router.get('/buyer/myitems', protect, getBuyerItems);
 
 module.exports = router;

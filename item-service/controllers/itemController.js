@@ -4,9 +4,13 @@ const Item = require('../models/item');
 // Create a new item listing
 exports.createItem = async (req, res) => {
   try {
-    const { title, description, price } = req.body;
+    const { title, description, price, category } = req.body;
+    if (!category) {
+      return res.status(400).json({ message: 'Category is required' });
+    }
+    // Seller is the current user (set by auth middleware)
     const seller = req.user._id;
-    const item = await Item.create({ title, description, price, seller });
+    const item = await Item.create({ title, description, price, category, seller });
     res.status(201).json(item);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -69,6 +73,44 @@ exports.getBuyerItems = async (req, res) => {
   try {
     const items = await Item.find({ buyer: req.user._id })
       .populate('seller', 'username email');
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Search for items
+exports.searchItems = async (req, res) => {
+  try {
+    // Get query parameters
+    const { q, minPrice, maxPrice, category } = req.query;
+    let filter = { purchased: false }; // Only search among available items
+
+    // If a query (q) is provided, search in the title and/or description
+    if (q) {
+      filter.$or = [
+        { title: { $regex: q, $options: 'i' } },
+        { description: { $regex: q, $options: 'i' } }
+      ];
+    }
+
+    // If price filters are provided, add them
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) {
+        filter.price.$gte = Number(minPrice);
+      }
+      if (maxPrice) {
+        filter.price.$lte = Number(maxPrice);
+      }
+    }
+
+    // If category is provided, filter by category
+    if (category) {
+      filter.category = category;
+    }
+
+    const items = await Item.find(filter);
     res.json(items);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
