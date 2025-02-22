@@ -13,6 +13,7 @@ import LoginPage from './Pages/LoginPage.js';
 import CreateAccountPage from './Pages/CreateAccountPage.js';
 import NotificationsPage from './Pages/NotificationsPage.js';
 import MessagesPage from './Pages/MessagesPage.js';
+import DetailsPage from './Pages/DetailsPage.js';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path ="/create-account" element={<CreateAccountPage/>}/>
           <Route path ="/notifications" element={<NotificationsPage/>}/>
           <Route path ="/messages" element={<MessagesPage/>}/>
+          <Route path = "/details" element={<DetailsPage/>}/>
           <Route path="/*" element={<ErrorPage/>} />
       </Routes>
       <Footer/>
