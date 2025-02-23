@@ -23,6 +23,7 @@ export default function BasicSelect({callBack}) {
           label="Sort"
           onChange={handleChange}
         >
+          <MenuItem value={0}>No Sorting</MenuItem>
           <MenuItem value={1}>Newest</MenuItem>
           <MenuItem value={2}>Ascending Prices</MenuItem>
           <MenuItem value={3}>Descending Prices</MenuItem>

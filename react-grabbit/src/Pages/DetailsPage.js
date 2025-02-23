@@ -21,6 +21,16 @@ function DetailsPage({cartCall}){
         cartCall(item);
     }
 
+    function stringToHslColor(string, saturation, boldness) {
+        var hash = 0;
+        for (var i = 0; i < string.length; i++) {
+        hash = string.charCodeAt(i) + ((hash << 5) - hash);
+        }
+    
+        hash = hash % 360;
+        return 'hsl('+hash+', '+saturation+'%, '+boldness+'%)';
+    }
+
     return(
         <div className="DetailsPage-container">
             <div className="DetailsPage-holder">
@@ -39,8 +49,8 @@ function DetailsPage({cartCall}){
                     <p>{item.description}</p>
                 </div>
                 <div className="DetailsPage-order">
-                    <Avatar sx={{ bgcolor: "red" }}>M</Avatar>
-                    <p>Sold by Michael</p>
+                    <Avatar style={{backgroundColor: stringToHslColor(item.seller,40,60)}}>{item.seller.substring(0,1)}</Avatar>
+                    <p>Sold by {item.seller}</p>
                     <h2>${item.price}</h2>
                     <p>Shipping: $5 international or Free local</p>
                     {
