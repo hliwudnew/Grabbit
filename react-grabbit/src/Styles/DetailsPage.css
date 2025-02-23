@@ -30,7 +30,11 @@
 }
 
 .DetailsPage-order{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
     width: 25%;
     padding-right: 1%;
+
 }

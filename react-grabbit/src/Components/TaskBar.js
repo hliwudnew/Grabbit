@@ -6,11 +6,28 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import {useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import MessageIcon from '@mui/icons-material/Message';
-function TaskBar(){
-//Hook state, for naviation
-const navigate = useNavigate();
+import Badge, { badgeClasses } from '@mui/material/Badge';
+import { styled } from '@mui/material/styles';
+import { useState,useEffect } from "react";
+function TaskBar({cartIcon}){
+    //Hook state, for naviation
+    const navigate = useNavigate();
+
+    const [badge,setBadge] = useState(0);
+    useEffect(()=> {
+        setBadge(cartIcon);
+    },[cartIcon])
+
+
+    //Styles for badge
+    const CartBadge = styled(Badge)`
+    & .${badgeClasses.badge} {
+    top: -12px;
+    right: -6px;
+    background-color: #685BE0;
+    }`;
 
     return(
         <div className="TaskBar">
@@ -33,6 +50,7 @@ const navigate = useNavigate();
                     </IconButton>
                     <IconButton onClick={() => navigate("/cart")}>
                         <ShoppingCartIcon/>
+                        <CartBadge badgeContent={badge} color="primary" overlap="circular" />
                     </IconButton>
                     <IconButton onClick={() => navigate("/login")}>
                         <PersonIcon/>

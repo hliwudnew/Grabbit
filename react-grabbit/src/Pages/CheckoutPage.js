@@ -1,7 +1,12 @@
 import { TextField, Button } from "@mui/material";
 import "../Styles/CheckoutPage.css"
 import CheckoutTile from "../Components/CheckoutTile";
+import { useLocation } from "react-router-dom";
 function CheckoutPage(){
+
+    const { state } = useLocation();
+    const cart = state.data;
+    const total = state.total;
 
     return(
         <div className="CheckoutPage-content">
@@ -18,9 +23,13 @@ function CheckoutPage(){
                 </div>
                 <div className="CheckoutPage-Confirm">
                     <div className="CheckoutPage-items">
-                        <CheckoutTile/>
-                        <CheckoutTile/>
-                        <CheckoutTile/>
+                        {
+                            cart.map((item)=>{
+                                return(
+                                    <CheckoutTile data={item}/>
+                                )
+                            })
+                        }
                     </div>
                     <div>
                         <h1>Credit Card Information</h1>
@@ -33,7 +42,7 @@ function CheckoutPage(){
                     </div>
                     <div style={{textAlign:"left"}}>
                         <hr/>
-                        <h1>Total: $17.75</h1>
+                        <h1>Total: ${total}</h1>
                         <div style={{textAlign:"center"}}>
                             <Button style={{backgroundColor:"#685BE0"}} variant="contained">Proccess Order</Button>
                         </div>

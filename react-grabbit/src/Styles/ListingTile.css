@@ -1,6 +1,4 @@
 .ListingTile-container{
-    height: inherit;
-    width: inherit;
     display: flex;
     flex-direction: column;
     /* border: 5px solid red; */
@@ -19,13 +17,13 @@
 
 .ListingTile-img-holder{
     width: 100%;
-    height: 75%;
+    height: 65%;
     cursor: pointer;
 }
 
 .ListingTile-description{
     width: 100%;
-    height: 100%;
+    height: 35%;
     background-color: white;
     text-align: left;
 }
