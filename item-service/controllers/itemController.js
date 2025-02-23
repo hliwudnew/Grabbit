@@ -116,3 +116,29 @@ exports.searchItems = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+// Mark an item as sold (by the seller)
+exports.markItemAsSold = async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+    // Ensure the authenticated user is the seller
+    if (item.seller.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Not authorized to mark this item as sold.' });
+    }
+    // If the item is already marked as sold, return an error
+    if (item.purchased) {
+      return res.status(400).json({ message: 'Item is already marked as sold.' });
+    }
+    
+    // Mark the item as sold
+    item.purchased = true;
+    await item.save();
+
+    res.json({ message: 'Item marked as sold successfully.', item });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

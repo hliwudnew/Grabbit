@@ -8,21 +8,21 @@ const {
   purchaseItem,
   getSellerItems,
   getBuyerItems,
-  searchItems  
+  searchItems,
+  markItemAsSold  // New function
 } = require('../controllers/itemController');
 const { protect } = require('../middleware/auth');
 
-// New search endpoint: GET /api/items/search
+// New route for marking an item as sold
+router.post('/:id/sold', protect, markItemAsSold);
+
+// Existing routes (ensure static routes come before dynamic ones if needed)
 router.get('/search', searchItems);
-
-// Existing public endpoints
-router.get('/', getItems);
-router.get('/:id', getItemById);
-
-// Existing protected endpoints
-router.post('/', protect, createItem);
-router.post('/:id/purchase', protect, purchaseItem);
 router.get('/seller/myitems', protect, getSellerItems);
 router.get('/buyer/myitems', protect, getBuyerItems);
+router.get('/', getItems);
+router.get('/:id', getItemById);
+router.post('/', protect, createItem);
+router.post('/:id/purchase', protect, purchaseItem);
 
 module.exports = router;
