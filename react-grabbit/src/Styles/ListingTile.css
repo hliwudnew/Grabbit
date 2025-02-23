@@ -27,3 +27,8 @@
     background-color: white;
     text-align: left;
 }
+
+.ListingTile-description-text{
+    padding-left: 5%;
+    color: #685BE0;
+}

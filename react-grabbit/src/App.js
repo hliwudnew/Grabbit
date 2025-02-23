@@ -14,6 +14,7 @@ import CreateAccountPage from './Pages/CreateAccountPage.js';
 import NotificationsPage from './Pages/NotificationsPage.js';
 import MessagesPage from './Pages/MessagesPage.js';
 import DetailsPage from './Pages/DetailsPage.js';
+import PostPage from './Pages/PostPage.js';
 
 var cart = [];
 
@@ -50,7 +51,8 @@ function App() {
           <Route path ="/notifications" element={<NotificationsPage/>}/>
           <Route path ="/messages" element={<MessagesPage/>}/>
           <Route path = "/details" element={<DetailsPage cartCall={setItem}/>}/>
-          <Route path="/*" element={<ErrorPage/>} />
+          <Route path ="/create" element={<PostPage/>}/>
+          <Route path="/*" element={<ErrorPage/>}/>
       </Routes>
       <Footer/>
     </div>

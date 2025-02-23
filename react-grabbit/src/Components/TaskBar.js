@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useNavigate} from "react-router-dom";
 import MessageIcon from '@mui/icons-material/Message';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Badge, { badgeClasses } from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
 import { useState,useEffect } from "react";
@@ -38,10 +39,13 @@ function TaskBar({cartIcon}){
                 </div>
                 <div className="TaskBar-pages">
                     <button>DropDown</button>
-                    <TextField size="small" style={{width:"100%"}} variant="outlined"></TextField>
+                    <TextField size="small" style={{width:"100%",borderRadius:"100%"}} variant="outlined"></TextField>
                     <Button style={{color:"black",borderColor:"black"}} variant="outlined" onClick={() => navigate("/listings")} className = "page">{<SearchIcon/>}</Button>
                 </div>
                 <div className="TaskBar-profile">
+                    <IconButton onClick={() => navigate("/create")}>
+                        <AddCircleOutlineIcon/>
+                    </IconButton>
                     <IconButton onClick={() => navigate("/messages")}>
                         <MessageIcon/>
                     </IconButton>

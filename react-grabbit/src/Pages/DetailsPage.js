@@ -30,12 +30,10 @@ function DetailsPage({cartCall}){
                 <div className="DetailsPage-description">
                     <h1>{item.name}</h1>
                     <hr/>
-                    <h4>Key Features</h4>
+                    <h4>Key Details</h4>
                     <ul>
                         <li>Condition: {item.condition}</li>
                         <li>Delivery: {item.delivery}</li>
-                        <li>100% Water Proof</li>
-                        <li>100% Water Proof</li>
                     </ul>
                     <h2>Description</h2>
                     <p>{item.description}</p>

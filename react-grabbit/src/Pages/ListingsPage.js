@@ -14,7 +14,7 @@ function ListingsPage(){
                 description: "This is for sale!",
                 contact:"email@gmail.com",
                 img:"https://plus.unsplash.com/premium_photo-1709589145461-4797b4e80e9c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                condition:"Used",
+                condition:"Pre-owned",
                 delivery:"in-person",
             },
             {
@@ -23,7 +23,7 @@ function ListingsPage(){
                 description: "This is for sale!",
                 contact:"email@gmail.com",
                 img:"https://images.unsplash.com/photo-1589128777073-263566ae5e4d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                condition:"New",
+                condition:"Brand New",
                 delivery:"in-person",
             },
             {
@@ -32,7 +32,7 @@ function ListingsPage(){
                 description: "This is for sale!",
                 contact:"email@gmail.com",
                 img:"https://images.unsplash.com/photo-1537498425277-c283d32ef9db?q=80&w=2078&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                condition:"New",
+                condition:"Brand New",
                 delivery:"in-person",
             },
             {
@@ -41,7 +41,7 @@ function ListingsPage(){
                 description: "This is for sale!",
                 contact:"email@gmail.com",
                 img:"https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?q=80&w=1988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                condition:"New",
+                condition:"Brand New",
                 delivery:"in-person",
             }
         ]
