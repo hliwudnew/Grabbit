@@ -1,8 +1,8 @@
 // routes/messageRoutes.js
 const express = require('express');
 const router = express.Router();
-const { sendMessage, getConversation } = require('../../user-service/controllers/messageController');
-const { protect } = require('../middleware/auth');
+const { sendMessage, getConversation } = require('../controllers/messageController');
+const { protect } = require('../../item-service/middleware/auth');
 
 // Endpoint to send a message (protected)
 router.post('/', protect, sendMessage);
