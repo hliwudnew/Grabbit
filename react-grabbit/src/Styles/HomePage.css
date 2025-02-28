@@ -1,0 +1,33 @@
+.HomePage-content{
+    text-align: center;
+    height: 100%;
+    background-color: #F5F0FD;
+}
+
+.HomePage-banner{
+    background-color:#685BE0;
+    text-align: left;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    padding: 1%;
+    align-items: center ;
+    justify-content: space-around;
+}
+
+.HomePage-categories{
+    display: flex;
+    flex-direction: column;
+    margin: 5%;
+    color: #685BE0;
+}
+
+.HomePage-tiles{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    row-gap: 5%;
+    column-gap: 1%;
+    margin-bottom: 5%;
+    /* display: flex;
+    flex-wrap: wrap; */
+}

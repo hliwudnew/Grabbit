@@ -1,0 +1,11 @@
+.CheckoutTile-content{
+
+}
+
+.CheckoutTile-holder{
+    display: flex;
+    justify-content: space-evenly;
+    gap: 5%;
+    margin: 5%;
+    align-items: center;
+}

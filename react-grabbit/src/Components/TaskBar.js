@@ -1,0 +1,69 @@
+import "../Styles/TaskBar.css";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import IconButton from '@mui/material/IconButton';
+import PersonIcon from '@mui/icons-material/Person';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import SearchIcon from '@mui/icons-material/Search';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import {useNavigate} from "react-router-dom";
+import MessageIcon from '@mui/icons-material/Message';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import Badge, { badgeClasses } from '@mui/material/Badge';
+import { styled } from '@mui/material/styles';
+import { useState,useEffect } from "react";
+function TaskBar({cartIcon}){
+    //Hook state, for naviation
+    const navigate = useNavigate();
+
+    const [badge,setBadge] = useState(0);
+    useEffect(()=> {
+        setBadge(cartIcon);
+    },[cartIcon])
+
+
+    //Styles for badge
+    const CartBadge = styled(Badge)`
+    & .${badgeClasses.badge} {
+    top: -12px;
+    right: -6px;
+    background-color: #685BE0;
+    }`;
+
+    return(
+        <div className="TaskBar">
+            <div className="TaskBar-content">
+                <div className="TaskBar-logo">
+                    <img style={{width:"3.5rem", height: "3.5rem", cursor:"pointer"}} onClick={() => navigate("/")} src ="./grabbit-cut.png" alt = "logo"></img>
+                    <h1>Grabbit</h1>
+                </div>
+                <div className="TaskBar-pages">
+                    <button>DropDown</button>
+                    <TextField size="small" style={{width:"100%",borderRadius:"100%"}} variant="outlined"></TextField>
+                    <Button style={{color:"black",borderColor:"black"}} variant="outlined" onClick={() => navigate("/listings")} className = "page">{<SearchIcon/>}</Button>
+                </div>
+                <div className="TaskBar-profile">
+                    <IconButton onClick={() => navigate("/create")}>
+                        <AddCircleOutlineIcon/>
+                    </IconButton>
+                    <IconButton onClick={() => navigate("/messages")}>
+                        <MessageIcon/>
+                    </IconButton>
+                    <IconButton onClick={() => navigate("/notifications")}>
+                        <NotificationsIcon/>
+                    </IconButton>
+                    <IconButton onClick={() => navigate("/cart")}>
+                        <ShoppingCartIcon/>
+                        <CartBadge badgeContent={badge} color="primary" overlap="circular" />
+                    </IconButton>
+                    <IconButton onClick={() => navigate("/login")}>
+                        <PersonIcon/>
+                    </IconButton>
+                </div>
+            </div>
+        </div>
+    );
+
+}
+
+export default TaskBar;
