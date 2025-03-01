@@ -2,10 +2,13 @@ import "../Styles/CartPage.css"
 import CartTile from "../Components/CartTile";
 import { Button } from "@mui/material";
 import {useNavigate } from "react-router-dom";
-
-function CartPage({cart}){
+import { useContext } from "react";
+import { Watchlist } from "../App.js";
+function CartPage(){
     //Hook state, for naviation
     const navigate = useNavigate();
+    const cart = useContext(Watchlist);
+
 
     var subtotal = 0;
     var total = 0;
@@ -29,7 +32,7 @@ function CartPage({cart}){
             <div className="CartPage-holder">
                 <div className="CartPage-Cart">
                     <div className="CartPage-header">
-                        <h1>Your Cart</h1>
+                        <h1>Your Watchlist</h1>
                         <hr style={{display:"block",margin:"0%",backgroundColor:"#685BE0", width:"70%",borderTop:"5px solid #685BE0"}}/>
                     </div>
                     <div className="CartPage-Items">
@@ -45,7 +48,7 @@ function CartPage({cart}){
                         }
                     </div>
                 </div>
-                <div className="CartPage-Summary">
+                {/* <div className="CartPage-Summary">
                     <div style={{paddingLeft:"5%"}}>
                         {
                             calculate()
@@ -60,7 +63,7 @@ function CartPage({cart}){
                     <div style={{display:"flex",textAlign:"center", alignItems:"center", justifyContent:"center"}}>
                         <Button onClick={() => navigate("/checkout",{state: {data: cart, total: total}})} style={{backgroundColor:"#685BE0", marginBottom:"5%"}} variant="contained">Secure Checkout</Button>
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     );

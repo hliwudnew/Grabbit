@@ -6,19 +6,31 @@ import CheckIcon from '@mui/icons-material/Check';
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
-function DetailsPage({cartCall}){
+import { useContext } from "react";
+import { EditWatchlist, Watchlist, EditWatchBadge } from "../App.js";
+function DetailsPage(){
     //Hook state, for naviation
     const navigate = useNavigate();
+    const watch = useContext(Watchlist);
+    const set = useContext(EditWatchlist);
+    const editBadge = useContext(EditWatchBadge);
+
 
 
     //Used to grab the data sent from the listings page, to its specific details
     const { state } = useLocation();
     const item = state.data;
-
+    //Changes UI to show purchased
     const [added,setAdded] = useState(false);
+
     function handleAdded(){
         setAdded(true);
-        cartCall(item);
+        set([...watch,item]);
+        editBadge(watch.length + 1);
+    }
+
+    function handlePurchase(){
+        console.log("Send to stipe API");
     }
 
     function stringToHslColor(string, saturation, boldness) {
@@ -53,10 +65,14 @@ function DetailsPage({cartCall}){
                     <p>Sold by {item.seller}</p>
                     <h2>${item.price}</h2>
                     <p>Shipping: $5 international or Free local</p>
+                    <Button onClick={handlePurchase} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Purchase</Button>
                     {
                         added ? 
-                        <Alert style={{marginBottom:"5%"}} icon={<CheckIcon fontSize="inherit" />} severity="success">Added to Your Cart</Alert> 
-                        : <Button onClick={handleAdded} style={{backgroundColor:"#685BE0"}} variant="contained">Add to Cart</Button>
+                        <Alert style={{marginBottom:"5%"}} icon={<CheckIcon fontSize="inherit" />} severity="success">Added to Your Watchlist</Alert> 
+                        : 
+                        <div style={{display:"flex", flexDirection:"column"}}>
+                            <Button onClick={handleAdded} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Add to Watchlist</Button>
+                        </div>
                     }
                 </div>
             </div>

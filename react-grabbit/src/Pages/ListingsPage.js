@@ -9,6 +9,7 @@ function ListingsPage(){
     const [items,setItems] = useState(
         [
             {
+                id:"1",
                 name: "Soccer Ball",
                 price: "10",
                 description: "This is for sale!",
@@ -19,6 +20,7 @@ function ListingsPage(){
                 delivery:"in-person",
             },
             {
+                id:"2",
                 name: "Necklace",
                 price: "20",
                 description: "This is for sale!",
@@ -29,6 +31,7 @@ function ListingsPage(){
                 delivery:"in-person",
             },
             {
+                id:"3",
                 name: "Computer",
                 price: "100",
                 description: "This is for sale!",
@@ -39,6 +42,7 @@ function ListingsPage(){
                 delivery:"in-person",
             },
             {
+                id:"4",
                 name: "Watch",
                 price: "2000",
                 description: "This is for sale!",
