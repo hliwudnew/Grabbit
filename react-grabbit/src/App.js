@@ -15,45 +15,42 @@ import NotificationsPage from './Pages/NotificationsPage.js';
 import MessagesPage from './Pages/MessagesPage.js';
 import DetailsPage from './Pages/DetailsPage.js';
 import PostPage from './Pages/PostPage.js';
+import { createContext } from 'react';
 
-var cart = [];
+export const Watchlist = createContext();
+export const EditWatchlist = createContext();
+export const EditWatchBadge = createContext();
+// export const User = createContext();
 
 function App() {
 
-  //Item to add to cart
-  const [item,setItem] = useState();
-  const [cartIcon,setCartIcon] = useState(0);
-
-  //Used to prevent running on render
-  const isMounted = useRef(false);
-
-  //Updates the cart + icon
-  useEffect(() => {
-    if(!isMounted.current){
-      isMounted.current = true;
-      return;
-    }
-    setCartIcon(cartIcon + 1);
-    cart.push(item);
-  },[item]);
+  const [watch,setWatch] = useState([]);
+  const [watchIcon,setWatchIcon] = useState(0);
+  const [user,setUser] = useState()
 
   return (
     <div className="main-container">
-      <TaskBar cartIcon={cartIcon}/>
+      <TaskBar user={user} cartIcon={watchIcon}/>
+      <Watchlist.Provider value={watch}>
+      <EditWatchlist.Provider value={setWatch}>
+      <EditWatchBadge.Provider value={setWatchIcon}>
       <Routes>
           <Route path="/" element={<HomePage/>} />
-          <Route path="/cart" element={<CartPage cart={cart}/>}/>
+          <Route path="/cart" element={<CartPage/>}/>
           <Route path="/checkout" element={<CheckoutPage/>}/>
           <Route path="/account" element={<AccountPage/>}/>
           <Route path ="/listings" element={<ListingsPage/>}/>
-          <Route path ="/login" element={<LoginPage/>}/>
+          <Route path ="/login" element={<LoginPage callBack={setUser}/>}/>
           <Route path ="/create-account" element={<CreateAccountPage/>}/>
           <Route path ="/notifications" element={<NotificationsPage/>}/>
           <Route path ="/messages" element={<MessagesPage/>}/>
-          <Route path = "/details" element={<DetailsPage cartCall={setItem}/>}/>
+          <Route path = "/details" element={<DetailsPage/>}/>
           <Route path ="/create" element={<PostPage/>}/>
           <Route path="/*" element={<ErrorPage/>}/>
       </Routes>
+      </EditWatchBadge.Provider>
+      </EditWatchlist.Provider>
+      </Watchlist.Provider>
       <Footer/>
     </div>
   );

@@ -1,8 +1,6 @@
 import "../Styles/TaskBar.css";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import IconButton from '@mui/material/IconButton';
 import PersonIcon from '@mui/icons-material/Person';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -12,7 +10,8 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Badge, { badgeClasses } from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
 import { useState,useEffect } from "react";
-function TaskBar({cartIcon}){
+import TurnedInIcon from '@mui/icons-material/TurnedIn';
+function TaskBar({cartIcon,user}){
     //Hook state, for naviation
     const navigate = useNavigate();
 
@@ -49,11 +48,8 @@ function TaskBar({cartIcon}){
                     <IconButton onClick={() => navigate("/messages")}>
                         <MessageIcon/>
                     </IconButton>
-                    <IconButton onClick={() => navigate("/notifications")}>
-                        <NotificationsIcon/>
-                    </IconButton>
                     <IconButton onClick={() => navigate("/cart")}>
-                        <ShoppingCartIcon/>
+                        <TurnedInIcon/>
                         <CartBadge badgeContent={badge} color="primary" overlap="circular" />
                     </IconButton>
                     <IconButton onClick={() => navigate("/login")}>

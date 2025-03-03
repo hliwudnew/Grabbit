@@ -1,3 +1,41 @@
 .PostPage-container{
     text-align: center;
+    margin: 5%;
+    min-height: 100vh;
+    max-height: 100%;
+}
+
+.PostPage-holder{
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    background-color: white;
+    min-height: 100vh;
+    max-height: 100%;
+    padding: 5%;
+}
+
+.PostPage-Information{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.PostingPage-img{
+    text-align: center;
+    width: 50%;
+}
+
+.PostingPage-Details{
+    text-align: left;
+    padding-left: 5%;
+}
+
+.PostingPage-description{
+    text-align: left;
+    padding-left: 5%;
+    height: 50%;
+}
+
+.PostingPage-submit{
+    margin-top: 10%;
 }

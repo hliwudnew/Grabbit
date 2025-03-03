@@ -5,7 +5,20 @@ import ContactTile from "../Components/ContactTile";
 import Avatar from '@mui/material/Avatar';
 import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
+import { useState } from "react";
+import MessageTile from "../Components/MessageTile";
 function MessagesPage(){
+
+    const [messages,setMessages] = useState(["Hi Mr"])
+    const [text,setText] = useState();
+
+    function sendMessage(){
+        if(text){
+            setMessages([...messages,text]);
+            setText();
+            //Send notification and update database
+        }
+    }
 
     return(
         <div className="MessagesPage-container">
@@ -16,10 +29,6 @@ function MessagesPage(){
                     </div>
                     <div className="MessagesPage-contacts">
                         <ContactTile/>
-                        <ContactTile/>
-                        <ContactTile/>
-                        <ContactTile/>
-                        <ContactTile/>
                     </div>
                 </div>
                 <div className="MessagesPage-right">
@@ -29,16 +38,23 @@ function MessagesPage(){
                     </div>
                     <hr style={{display:"block",margin:"0%",borderTop:"1px solid black"}}/>
                     <div className="MessagesPage-Messages">
-                        <p>Hellow</p>
-                        <p>Hellow</p>
-                        <p>Hellow</p>
+                    {
+                        messages ?
+                        messages.map((text) => {
+                            return(
+                                <MessageTile data={text}/>
+                            )
+                        })
+                        :
+                        <></>
+                    }
                     </div>
                     <div className="MessagesPage-Texting">
                         <hr/>
-                        <IconButton>
+                        <IconButton onClick={sendMessage}>
                             <SendIcon/>
                         </IconButton>
-                        <TextField style={{width:"80%"}} size="small" variant="outlined"></TextField>
+                        <TextField onChange={(event) => {setText(event.target.value)}} style={{width:"80%"}} size="small" variant="outlined"></TextField>
                     </div>
                 </div>
             </div>
