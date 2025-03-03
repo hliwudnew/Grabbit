@@ -27,6 +27,8 @@
 .MessagesPage-contacts{
    background-color: #F5F0FD;
    height: 100%;
+   overflow: scroll;
+   overflow-x: hidden;
 }
 
 .MessagesPage-right{
@@ -45,6 +47,8 @@
 
 .MessagesPage-Messages{
     flex-grow: 4;
+    overflow: scroll;
+    overflow-x: hidden;
 }
 
 .MessagesPage-Texting{

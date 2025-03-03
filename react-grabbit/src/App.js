@@ -20,15 +20,17 @@ import { createContext } from 'react';
 export const Watchlist = createContext();
 export const EditWatchlist = createContext();
 export const EditWatchBadge = createContext();
+// export const User = createContext();
 
 function App() {
 
   const [watch,setWatch] = useState([]);
   const [watchIcon,setWatchIcon] = useState(0);
+  const [user,setUser] = useState()
 
   return (
     <div className="main-container">
-      <TaskBar cartIcon={watchIcon}/>
+      <TaskBar user={user} cartIcon={watchIcon}/>
       <Watchlist.Provider value={watch}>
       <EditWatchlist.Provider value={setWatch}>
       <EditWatchBadge.Provider value={setWatchIcon}>
@@ -38,7 +40,7 @@ function App() {
           <Route path="/checkout" element={<CheckoutPage/>}/>
           <Route path="/account" element={<AccountPage/>}/>
           <Route path ="/listings" element={<ListingsPage/>}/>
-          <Route path ="/login" element={<LoginPage/>}/>
+          <Route path ="/login" element={<LoginPage callBack={setUser}/>}/>
           <Route path ="/create-account" element={<CreateAccountPage/>}/>
           <Route path ="/notifications" element={<NotificationsPage/>}/>
           <Route path ="/messages" element={<MessagesPage/>}/>

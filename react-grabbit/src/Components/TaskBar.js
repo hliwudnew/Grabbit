@@ -11,7 +11,7 @@ import Badge, { badgeClasses } from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
 import { useState,useEffect } from "react";
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
-function TaskBar({cartIcon}){
+function TaskBar({cartIcon,user}){
     //Hook state, for naviation
     const navigate = useNavigate();
 

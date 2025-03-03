@@ -2,6 +2,8 @@
 require('dotenv').config();
 const express = require('express');
 const connectDB = require('./config/db');
+const cors = require('cors');
+
 
 // Ensure that the User model is loaded so that it can be used by the controllers
 require('./models/user');
@@ -12,6 +14,9 @@ const messageRoutes = require('./routes/messageRoutes');
 connectDB();
 
 const app = express();
+
+//Allows communication from one host/server to another, Should specify which at somepoint
+app.use(cors());
 
 // Middleware to parse JSON bodies
 app.use(express.json());
