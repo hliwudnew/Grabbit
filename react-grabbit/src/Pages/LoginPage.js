@@ -14,8 +14,7 @@ function LoginPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // You can also add an Accept header if needed:
-          // "Accept": "application/json"
+
         },
         body: JSON.stringify({ email, password }),
       });

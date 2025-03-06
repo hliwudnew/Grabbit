@@ -1,16 +1,15 @@
 // controllers/itemController.js
 const Item = require('../models/item');
 
-// Create a new item listing
+// Create a new item listing with image upload
 exports.createItem = async (req, res) => {
   try {
-    const { title, description, price, category } = req.body;
-    if (!category) {
-      return res.status(400).json({ message: 'Category is required' });
-    }
-    // Seller is the current user (set by auth middleware)
+    const { title, description, price, category, condition, delivery } = req.body;
     const seller = req.user._id;
-    const item = await Item.create({ title, description, price, category, seller });
+    // req.file will be added by multer if an image was uploaded
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
+    const item = await Item.create({ title, description, price, category, condition, delivery, seller, imageUrl });
     res.status(201).json(item);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -142,3 +141,29 @@ exports.markItemAsSold = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+const multer = require('multer');
+const path = require('path');
+
+// Configure storage - files will be stored in 'uploads/' directory
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');  // Ensure this directory exists in your project root
+  },
+  filename: function (req, file, cb) {
+    // Create a unique filename using Date.now() + original extension
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + Date.now() + ext);
+  }
+});
+
+// File filter to only allow images (optional)
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image/")) {
+    cb(null, true);
+  } else {
+    cb(new Error("Not an image! Please upload an image file."), false);
+  }
+};
+
+const upload = multer({ storage: storage, fileFilter: fileFilter });

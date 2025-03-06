@@ -15,7 +15,6 @@ function CreateAccountPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Optionally include Accept header if needed:
           // "Accept": "application/json"
         },
         body: JSON.stringify({
@@ -36,7 +35,6 @@ function CreateAccountPage() {
       } else {
         // Handle errors from the server (e.g., validation errors)
         console.error("Error creating account:", json);
-        // You could set an error message state here to display on the UI
       }
     } catch (error) {
       console.error("Request failed:", error);

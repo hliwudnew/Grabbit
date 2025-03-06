@@ -1,74 +1,179 @@
-import {Button, TextField } from "@mui/material";
-import Alert from '@mui/material/Alert';
-import CheckIcon from '@mui/icons-material/Check';
-import "../Styles/PostPage.css"
-import {useNavigate } from "react-router-dom";
 import { useState } from "react";
-function PostPage(){
-    //Hook state, for naviation
-    const navigate = useNavigate();
+import "../Styles/PostPage.css";
+import { Button, TextField, Select, MenuItem, InputLabel, FormControl, Alert } from "@mui/material";
+import CheckIcon from '@mui/icons-material/Check';
+import { useNavigate } from "react-router-dom";
 
-    //For UI changes
-    const [uploaded, setUploaded] = useState(false);
-    const [post, setPost] = useState(false)
+function PostPage() {
+  const navigate = useNavigate();
 
-    //For data
-    const [name, setName] = useState("");
-    const [price, setPrice] = useState("");
-    const [condtion, setCondition] = useState("");
-    const [delivery, setDelivery] = useState("");
+  // UI state
+  const [uploaded, setUploaded] = useState(false);
+  const [postSuccess, setPostSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-    function handleUpload(){
-        //Will need to grab the image here, and upload it and then pass it to the image tag below
-        setUploaded(true);
+  // Data state
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState("");
+  const [category, setCategory] = useState("");
+  const [condition, setCondition] = useState("");
+  const [delivery, setDelivery] = useState("");
+  const [description, setDescription] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+
+  // Handle image upload
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0]);
+      setImagePreview(URL.createObjectURL(e.target.files[0]));
+      setUploaded(true);
+      setErrorMsg(""); // Clear any previous error if an image is selected
+    }
+  };
+
+  const handlePost = async () => {
+    // Check if an image is selected before submission
+    if (!imageFile) {
+      setErrorMsg("Image is required.");
+      return;
     }
 
-    function handlePost(){
-        //Sent to database
-        console.log("Send to database")
-        console.log("\n"+ name + ", "+ price + ", "+ condtion + ", "+ delivery)
-        setPost(true)
-    }
+    // Create FormData to support file upload
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("category", category);
+    formData.append("condition", condition);
+    formData.append("delivery", delivery);
+    formData.append("image", imageFile); // Now always append, since image is required
 
-    return(
-        <div className="PostPage-container">
-            <div className="PostPage-holder">
-                <h1>Create a Listing</h1>
-                <div className="PostPage-Information">
-                    <div className="PostingPage-Details">
-                        <h3>Name</h3>
-                        <TextField onChange={(event, newValue) => {setName(event.target.value);}} label="Name" variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
-                        <h3>Price</h3>
-                        <TextField onChange={(event, newValue) => {setPrice(event.target.value);}} label="Price" variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
-                        <h3>Condition</h3>
-                        <TextField onChange={(event, newValue) => {setCondition(event.target.value);}} label="Condition" variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
-                        <h3>Delivery</h3>
-                        <TextField onChange={(event, newValue) => {setDelivery(event.target.value);}} label="Delivery" variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
-                    </div>
-                    <div className="PostingPage-img">
-                        {
-                            uploaded? 
-                            <img alt="img"></img>
-                            :
-                            <Button style={{backgroundColor:"#685BE0", color:"white"}} onClick={handleUpload}>Upload Image</Button>
-                        }
-                    </div>
-                </div>
-                <div className="PostingPage-description">
-                    <h3>Description</h3>
-                    <TextField multiline label="Description" style={{width:"100%", height:"100%"}} variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
-                </div>
-                <div className="PostingPage-submit">
-                    {
-                        post?
-                        <Alert style={{marginBottom:"5%"}} icon={<CheckIcon fontSize="inherit" />} severity="success">Post Successful</Alert> 
-                        :
-                        <Button onClick={handlePost} style={{backgroundColor:"#685BE0", width:"50%"}} variant="contained">Post</Button>
-                    }
-                </div>
-            </div>
+    try {
+      const response = await fetch("http://localhost:5003/api/items", {
+        method: "POST",
+        // When sending FormData, do not set Content-Type manually.
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+        },
+        body: formData,
+      });
+      const json = await response.json();
+      console.log("Response:", json);
+      if (response.ok) {
+        setPostSuccess(true);
+      } else {
+        setErrorMsg(json.message || "Error posting item");
+        console.error("Error posting item:", json);
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+      setErrorMsg("Request failed. Please try again.");
+    }
+  };
+
+  return (
+    <div className="PostPage-container">
+      <div className="PostPage-holder">
+        <h1>Create a Listing</h1>
+        <div className="PostPage-Information">
+          <div className="PostingPage-Details">
+            <h3>Title</h3>
+            <TextField
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              label="Title"
+              variant="outlined"
+              sx={{ input: { color: "#685BE0" } }}
+              className="account-input"
+            />
+            <h3>Price</h3>
+            <TextField
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              label="Price"
+              variant="outlined"
+              sx={{ input: { color: "#685BE0" } }}
+              className="account-input"
+            />
+            <h3>Category</h3>
+            <FormControl fullWidth>
+              <InputLabel>Category</InputLabel>
+              <Select
+                value={category}
+                label="Category"
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <MenuItem value={"electronics"}>Electronics</MenuItem>
+                <MenuItem value={"clothing"}>Clothing</MenuItem>
+                <MenuItem value={"books"}>Books</MenuItem>
+                <MenuItem value={"furniture"}>Furniture</MenuItem>
+              </Select>
+            </FormControl>
+            <h3>Condition</h3>
+            <FormControl fullWidth>
+              <InputLabel>Condition</InputLabel>
+              <Select
+                value={condition}
+                label="Condition"
+                onChange={(e) => setCondition(e.target.value)}
+              >
+                <MenuItem value={"new"}>New</MenuItem>
+                <MenuItem value={"pre-owned"}>Pre-owned</MenuItem>
+              </Select>
+            </FormControl>
+            <h3>Delivery</h3>
+            <FormControl fullWidth>
+              <InputLabel>Delivery</InputLabel>
+              <Select
+                value={delivery}
+                label="Delivery"
+                onChange={(e) => setDelivery(e.target.value)}
+              >
+                <MenuItem value={"in-person"}>In-Person</MenuItem>
+                <MenuItem value={"online"}>Online</MenuItem>
+                <MenuItem value={"both"}>Both</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div className="PostingPage-img">
+            {uploaded ? (
+              <img src={imagePreview} alt="Uploaded" style={{ maxWidth: "100%", maxHeight: "200px" }} />
+            ) : (
+              <div>
+                <input type="file" accept="image/*" onChange={handleImageChange} />
+              </div>
+            )}
+          </div>
         </div>
-    );
+        <div className="PostingPage-description">
+          <h3>Description</h3>
+          <TextField
+            multiline
+            label="Description"
+            style={{ width: "100%", height: "100%" }}
+            variant="outlined"
+            sx={{ input: { color: "#685BE0" } }}
+            className="account-input"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+        <div className="PostingPage-submit">
+          {postSuccess ? (
+            <Alert style={{ marginBottom: "5%" }} icon={<CheckIcon fontSize="inherit" />} severity="success">
+              Post Successful
+            </Alert>
+          ) : (
+            <Button onClick={handlePost} style={{ backgroundColor: "#685BE0", width: "50%" }} variant="contained">
+              Post
+            </Button>
+          )}
+          {errorMsg && <Alert severity="error" style={{ marginTop: "10px" }}>{errorMsg}</Alert>}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default PostPage;

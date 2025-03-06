@@ -13,7 +13,19 @@ const itemSchema = new mongoose.Schema(
       type: String, 
       required: true, 
       enum: ['electronics', 'clothing', 'books', 'furniture'] 
-    }
+    },
+    condition: { 
+      type: String, 
+      required: true, 
+      enum: ['new', 'pre-owned'] 
+    },
+    delivery: { 
+      type: String, 
+      required: true, 
+      enum: ['in-person', 'online', 'both'] 
+    },
+    // Make the image URL required
+    imageUrl: { type: String, required: true }
   },
   { timestamps: true }
 );

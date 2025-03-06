@@ -95,3 +95,32 @@ exports.getNotifications = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+// Change password for authenticated user
+exports.changePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ message: 'Old password and new password are required.' });
+    }
+
+    // Find the user based on the authenticated user's ID (set by auth middleware)
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    // Verify the old password
+    const isMatch = await user.matchPassword(oldPassword);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Old password is incorrect.' });
+    }
+
+    // Update the user's password
+    user.password = newPassword; // This will be hashed automatically by the pre-save hook
+    await user.save();
+
+    res.json({ message: 'Password updated successfully.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
