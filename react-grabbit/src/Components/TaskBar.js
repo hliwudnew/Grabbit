@@ -11,6 +11,8 @@ import Badge, { badgeClasses } from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
 import { useState,useEffect } from "react";
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
+import Avatar from '@mui/material/Avatar';
+
 function TaskBar({cartIcon,user}){
     //Hook state, for naviation
     const navigate = useNavigate();
@@ -29,6 +31,16 @@ function TaskBar({cartIcon,user}){
     background-color: #685BE0;
     }`;
 
+    function stringToHslColor(string, saturation, boldness) {
+        var hash = 0;
+        for (var i = 0; i < string.length; i++) {
+        hash = string.charCodeAt(i) + ((hash << 5) - hash);
+        }
+    
+        hash = hash % 360;
+        return 'hsl('+hash+', '+saturation+'%, '+boldness+'%)';
+    }
+
     return(
         <div className="TaskBar">
             <div className="TaskBar-content">
@@ -42,19 +54,26 @@ function TaskBar({cartIcon,user}){
                     <Button style={{color:"black",borderColor:"black"}} variant="outlined" onClick={() => navigate("/listings")} className = "page">{<SearchIcon/>}</Button>
                 </div>
                 <div className="TaskBar-profile">
-                    <IconButton onClick={() => navigate("/create")}>
-                        <AddCircleOutlineIcon/>
-                    </IconButton>
-                    <IconButton onClick={() => navigate("/messages")}>
-                        <MessageIcon/>
-                    </IconButton>
-                    <IconButton onClick={() => navigate("/cart")}>
-                        <TurnedInIcon/>
-                        <CartBadge badgeContent={badge} color="primary" overlap="circular" />
-                    </IconButton>
-                    <IconButton onClick={() => navigate("/login")}>
-                        <PersonIcon/>
-                    </IconButton>
+                    {
+                        !user ?
+                            <IconButton onClick={() => navigate("/login")}>
+                                <PersonIcon/>
+                            </IconButton>
+                        :
+                        <>
+                            <IconButton onClick={() => navigate("/create")}>
+                                <AddCircleOutlineIcon/>
+                            </IconButton>
+                            <IconButton onClick={() => navigate("/messages")}>
+                                <MessageIcon/>
+                            </IconButton>
+                            <IconButton onClick={() => navigate("/cart")}>
+                                <TurnedInIcon/>
+                                <CartBadge badgeContent={badge} color="primary" overlap="circular" />
+                            </IconButton>
+                            <Avatar onClick={() => navigate("/account")} style={{ marginLeft:"1%", cursor:"pointer", backgroundColor: stringToHslColor(user.username ? user.username :"Adam Sandler" ,40,60)}}>{user.username ? user.username.substring(0,1) : "A"}</Avatar>
+                        </>
+                    }
                 </div>
             </div>
         </div>

@@ -3,7 +3,7 @@ import { Button, TextField } from "@mui/material";
 import "../Styles/LoginPage.css";
 import { useNavigate } from "react-router-dom";
 
-function LoginPage() {
+function LoginPage({callBack}) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,11 +32,39 @@ function LoginPage() {
       localStorage.setItem("jwtToken", json.token);
 
       // Navigate to the account page upon successful login
-      navigate("/account");
+      requestProfile(json.token)
     } catch (error) {
       console.error("Request failed:", error);
     }
   };
+
+  async function requestProfile(token){
+    try{
+      const response = await fetch("http://localhost:5002/api/users/profile", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Profile Fetch failed:", errorData.message);
+        return;
+      }
+
+      const json = await response.json();
+      console.log("Response:", json);
+
+      //Provides user with their profile deatils for their account
+      callBack(json)
+      navigate("/account");
+    }
+    catch(error){
+      console.error("Request failed:", error);
+    }
+  }
 
   return ( 
     <div className="LoginPage-content">

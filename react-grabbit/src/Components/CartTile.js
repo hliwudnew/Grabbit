@@ -11,6 +11,10 @@ function CartTile({data: item}){
     const badge = useContext(EditWatchBadge);
     const watch = useContext(Watchlist);
 
+    const imageUrl = item.imageUrl 
+    ? `http://localhost:5003${item.imageUrl}` 
+    : "https://via.placeholder.com/150";
+
     function handleRemove(){
         for(let i =0; i < watch.length; i++){
             if(item.id === watch[i].id){
@@ -29,7 +33,7 @@ function CartTile({data: item}){
     return(
         <div className="CartTile-content">
             <div className="CartTile-data">
-                <img style={{width:"5rem",height:"5rem"}} src={item.img}></img>
+                <img style={{width:"5rem",height:"5rem"}} src={imageUrl}></img>
                 <p>{item.name}</p>
                 <p>${item.price}</p>
             </div>

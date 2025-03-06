@@ -28,6 +28,39 @@ function App() {
   const [watchIcon,setWatchIcon] = useState(0);
   const [user,setUser] = useState()
 
+  //Checks if logged in previously
+  useEffect(() =>{
+    const token = localStorage.getItem("jwtToken");
+    if(token){
+      requestProfile(token);
+    }
+  },[])
+
+  async function requestProfile(token){
+    try{
+      const response = await fetch("http://localhost:5002/api/users/profile", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Profile Fetch failed:", errorData.message);
+        return;
+      }
+
+      const json = await response.json();
+      console.log("Response:", json);
+      setUser(json);
+    }
+    catch(error){
+      console.error("Request failed:", error);
+    }
+  }
+
   return (
     <div className="main-container">
       <TaskBar user={user} cartIcon={watchIcon}/>
@@ -38,13 +71,13 @@ function App() {
           <Route path="/" element={<HomePage/>} />
           <Route path="/cart" element={<CartPage/>}/>
           <Route path="/checkout" element={<CheckoutPage/>}/>
-          <Route path="/account" element={<AccountPage/>}/>
+          <Route path="/account" element={<AccountPage callBack={setUser}/>}/>
           <Route path ="/listings" element={<ListingsPage/>}/>
           <Route path ="/login" element={<LoginPage callBack={setUser}/>}/>
           <Route path ="/create-account" element={<CreateAccountPage/>}/>
           <Route path ="/notifications" element={<NotificationsPage/>}/>
           <Route path ="/messages" element={<MessagesPage/>}/>
-          <Route path = "/details" element={<DetailsPage/>}/>
+          <Route path = "/details" element={<DetailsPage user={user}/>}/>
           <Route path ="/create" element={<PostPage/>}/>
           <Route path="/*" element={<ErrorPage/>}/>
       </Routes>
