@@ -31,7 +31,9 @@ function App() {
   //Checks if logged in previously
   useEffect(() =>{
     const token = localStorage.getItem("jwtToken");
-    requestProfile(token);
+    if(token){
+      requestProfile(token);
+    }
   },[])
 
   async function requestProfile(token){
