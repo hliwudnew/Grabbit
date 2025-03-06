@@ -31,7 +31,7 @@ function CreateAccountPage() {
         // Registration was successful
         // Optionally store the token from json.token, e.g.:
         // localStorage.setItem("jwtToken", json.token);
-        navigate("/account");
+        navigate("/login");
       } else {
         // Handle errors from the server (e.g., validation errors)
         console.error("Error creating account:", json);

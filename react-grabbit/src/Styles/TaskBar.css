@@ -38,6 +38,10 @@
     width: 33.3%;
     text-align: right;
     margin: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
 }
 
 .page{

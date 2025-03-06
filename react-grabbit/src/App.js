@@ -28,6 +28,14 @@ function App() {
   const [watchIcon,setWatchIcon] = useState(0);
   const [user,setUser] = useState()
 
+  //Checks if logged in previously
+  useEffect(() =>{
+    const token = localStorage.getItem("jwtToken");
+    if(token){
+      setUser(token)
+    }
+  },[])
+
   return (
     <div className="main-container">
       <TaskBar user={user} cartIcon={watchIcon}/>
@@ -38,13 +46,13 @@ function App() {
           <Route path="/" element={<HomePage/>} />
           <Route path="/cart" element={<CartPage/>}/>
           <Route path="/checkout" element={<CheckoutPage/>}/>
-          <Route path="/account" element={<AccountPage/>}/>
+          <Route path="/account" element={<AccountPage callBack={setUser}/>}/>
           <Route path ="/listings" element={<ListingsPage/>}/>
           <Route path ="/login" element={<LoginPage callBack={setUser}/>}/>
           <Route path ="/create-account" element={<CreateAccountPage/>}/>
           <Route path ="/notifications" element={<NotificationsPage/>}/>
           <Route path ="/messages" element={<MessagesPage/>}/>
-          <Route path = "/details" element={<DetailsPage/>}/>
+          <Route path = "/details" element={<DetailsPage user={user}/>}/>
           <Route path ="/create" element={<PostPage/>}/>
           <Route path="/*" element={<ErrorPage/>}/>
       </Routes>
