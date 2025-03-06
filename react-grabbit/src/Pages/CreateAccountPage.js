@@ -1,51 +1,94 @@
-import "../Styles/CreateAccountPage.css"
+import "../Styles/CreateAccountPage.css";
 import { Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-function CreateAccountPage(){
-    const navigate = useNavigate();
 
-    const [email,setEmail] = useState();
-    const [password,setPassword] = useState();
-    const [user,setUser] = useState();
+function CreateAccountPage() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [user, setUser] = useState("");
 
-    function requestCreate(){
-        try{
-            fetch("http://localhost:5002/api/users/register",{
-                method:"POST",
-                body: JSON.stringify({
-                    username:user,
-                    email:email,
-                    password:password,
-                })}).then((response) => response.json).then((json) => {
-                    console.log(json)
-                }).catch((error) => {
-                console.log(error)
-            });
-        }
-        catch{
+  const requestCreate = async () => {
+    try {
+      const response = await fetch("http://localhost:5002/api/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Optionally include Accept header if needed:
+          // "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          username: user,
+          email: email,
+          password: password,
+        }),
+      });
 
-        }
-        navigate("/account")
+      const json = await response.json();
+      console.log("Response:", json);
+
+      if (response.ok) {
+        // Registration was successful
+        // Optionally store the token from json.token, e.g.:
+        // localStorage.setItem("jwtToken", json.token);
+        navigate("/account");
+      } else {
+        // Handle errors from the server (e.g., validation errors)
+        console.error("Error creating account:", json);
+        // You could set an error message state here to display on the UI
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+      // Optionally display an error message on the UI
     }
+  };
 
-    return(
-        <div className="CreateAccountPage-content">
-            <div className="CreateAccountPage-holder">
-                <div style={{textAlign:"left"}}>
-                    <h1>Create Account</h1>
-                </div>
-                <div className="CreateAccountPage-inputs">
-                    <TextField onChange={(event, newValue) => {setEmail(event.target.value);}} label="Email" variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
-                    <TextField onChange={(event, newValue) => {setUser(event.target.value);}} label="Username" variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
-                    <TextField onChange={(event, newValue) => {setPassword(event.target.value);}} label="Password" variant="outlined" sx={{ input: { color: '#685BE0' } }} className='account-input'></TextField>
-                </div>
-                <div style={{textAlign:"center"}}>
-                    <Button onClick={requestCreate} style={{backgroundColor:"#685BE0", width:"50%"}} variant="contained">Create Account</Button>
-                </div>
-            </div>
+  return (
+    <div className="CreateAccountPage-content">
+      <div className="CreateAccountPage-holder">
+        <div style={{ textAlign: "left" }}>
+          <h1>Create Account</h1>
         </div>
-    );
+        <div className="CreateAccountPage-inputs">
+          <TextField
+            label="Email"
+            variant="outlined"
+            sx={{ input: { color: "#685BE0" } }}
+            className="account-input"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            label="Username"
+            variant="outlined"
+            sx={{ input: { color: "#685BE0" } }}
+            className="account-input"
+            value={user}
+            onChange={(e) => setUser(e.target.value)}
+          />
+          <TextField
+            label="Password"
+            variant="outlined"
+            type="password"
+            sx={{ input: { color: "#685BE0" } }}
+            className="account-input"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div style={{ textAlign: "center" }}>
+          <Button
+            onClick={requestCreate}
+            style={{ backgroundColor: "#685BE0", width: "50%" }}
+            variant="contained"
+          >
+            Create Account
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default CreateAccountPage;
