@@ -31,10 +31,33 @@ function App() {
   //Checks if logged in previously
   useEffect(() =>{
     const token = localStorage.getItem("jwtToken");
-    if(token){
-      setUser(token)
-    }
+    requestProfile(token);
   },[])
+
+  async function requestProfile(token){
+    try{
+      const response = await fetch("http://localhost:5002/api/users/profile", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Profile Fetch failed:", errorData.message);
+        return;
+      }
+
+      const json = await response.json();
+      console.log("Response:", json);
+      setUser(json);
+    }
+    catch(error){
+      console.error("Request failed:", error);
+    }
+  }
 
   return (
     <div className="main-container">
