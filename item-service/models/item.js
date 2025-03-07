@@ -6,7 +6,11 @@ const itemSchema = new mongoose.Schema(
     title: { type: String, required: true },
     description: { type: String },
     price: { type: Number, required: true },
-    seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    // Instead of referencing User, store an object with seller details:
+    seller: {
+      _id: { type: mongoose.Schema.Types.ObjectId, required: true },
+      username: { type: String, required: true }
+    },
     buyer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     purchased: { type: Boolean, default: false },
     category: { 
@@ -24,7 +28,6 @@ const itemSchema = new mongoose.Schema(
       required: true, 
       enum: ['in-person', 'online', 'both'] 
     },
-    // Make the image URL required
     imageUrl: { type: String, required: true }
   },
   { timestamps: true }

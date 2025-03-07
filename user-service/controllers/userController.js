@@ -3,8 +3,9 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
 // Generate a JWT token
-const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '1d' });
+const generateToken = (user) => {
+  // Include username in the payload
+  return jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1d' });
 };
 
 // Register a new user
@@ -22,7 +23,7 @@ exports.registerUser = async (req, res) => {
       _id: user._id,
       username: user.username,
       email: user.email,
-      token: generateToken(user._id)
+      token: generateToken(user)
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -39,7 +40,7 @@ exports.authUser = async (req, res) => {
         _id: user._id,
         username: user.username,
         email: user.email,
-        token: generateToken(user._id)
+        token: generateToken(user)
       });
     } else {
       res.status(401).json({ message: 'Invalid email or password' });

@@ -5,9 +5,10 @@ const Item = require('../models/item');
 exports.createItem = async (req, res) => {
   try {
     const { title, description, price, category, condition, delivery } = req.body;
-    const seller = req.user._id;
-    // req.file will be added by multer if an image was uploaded
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+    
+    // Embed seller info directly
+    const seller = { _id: req.user._id, username: req.user.username || "DefaultName" };
 
     const item = await Item.create({ title, description, price, category, condition, delivery, seller, imageUrl });
     res.status(201).json(item);
