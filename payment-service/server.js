@@ -3,22 +3,20 @@ require('dotenv').config()
 const express = require('express')
 const path = require('path');
 const app = express()
+const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY)
 
 app.use(express.json())
 app.use(express.static('public'))
 
-
-const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY)
-
+// Seller Revenue Dashboard
 app.post('/payment-dashboard', async (req, res) => {
 
-  //const loginLink = await stripe.accounts.createLoginLink('{{CONNECTED_ACCOUNT_ID}}')
   const loginLink = await stripe.accounts.createLoginLink('acct_1R0EMhFWFoWYGzJM')
-
   res.json({ url: loginLink.url });
 
 });
 
+// Create a Stripe Account For User
 app.post("/account-connect", async (req, res) => {
   try {
     const account = await stripe.accounts.create({
@@ -53,8 +51,8 @@ app.post("/account-connect", async (req, res) => {
   }
 });
 
-
-app.post("/account_link", async (req, res) => {
+// Onboard User Stripe Account, Connect To Grabbit's Stripe Platform Account
+app.post("/account-link", async (req, res) => {
   try {
     const { account } = req.body;
 
@@ -76,6 +74,7 @@ app.post("/account_link", async (req, res) => {
   }
 });
 
+// Successful Payment Page
 app.get('/success', async (req, res) => {
 
   const session = await stripe.checkout.sessions.retrieve(req.query.session_id)
@@ -85,6 +84,7 @@ app.get('/success', async (req, res) => {
 
 })
 
+// Stripe Checkout Page
 app.post('/checkout-session', async (req, res) => {
 
   try {
@@ -95,15 +95,15 @@ app.post('/checkout-session', async (req, res) => {
           price_data: {
             currency: 'cad',
             product_data: {
-              name: 'T-shirt',
+              name: 'T-shirt', // req.body.item_name
             },
-            unit_amount: 1000,
+            unit_amount: 1000, // In cents, req.body.costInCents
           },
           quantity: 1,
         },
       ],
       payment_intent_data: {
-        application_fee_amount: 123, // switch to cost*percentage
+        application_fee_amount: 123, // switch to cost*percentage, (req.body.costInCents / 100) * percentage_that_we_want
         transfer_data: {
           destination: 'acct_1R0EMhFWFoWYGzJM',
         },

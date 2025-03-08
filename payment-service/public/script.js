@@ -14,7 +14,6 @@ checkoutbtn.addEventListener('click', () => {
             {
                 // items: [
                 //     { id: 1, quantity: 2 },
-                //     { id: 2, quantity: 7 }
                 // ]
             }
         )
@@ -23,7 +22,7 @@ checkoutbtn.addEventListener('click', () => {
         if (res.ok) {
             return res.json();
         } else {
-            return res.json().then(json => Promise.reject(json)) // throws an error
+            return res.json().then(json => Promise.reject(json))
         }
 
     }).then(({ url }) => {
@@ -49,18 +48,13 @@ buyerdashboard.addEventListener('click', () => {
         headers: {
             'Content-Type': 'application/json'
         },
-
-        body: JSON.stringify(
-            // {
-            //     email: document.getElementById("email").value
-            // }
-        )
+        body: JSON.stringify({})
     }).then(res => {
 
         if (res.ok) {
             return res.json();
         } else {
-            return res.json().then(json => Promise.reject(json)) // throws an error
+            return res.json().then(json => Promise.reject(json))
         }
 
     }).then(({ url }) => {
@@ -97,7 +91,7 @@ stripeacc.addEventListener('click', () => {
         if (res.ok) {
             return res.json();
         } else {
-            return res.json().then(json => Promise.reject(json)) // throws an error
+            return res.json().then(json => Promise.reject(json))
         }
 
     }).then(({ url }) => {
@@ -118,13 +112,12 @@ linkacc.addEventListener('click', () => {
 
     console.log("button clicked");
 
-    fetch("/account_link", {
+    fetch("/account-link", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            //account: connectedAccountId,
             account: 'acct_1R0EMhFWFoWYGzJM'
         }),
     })
