@@ -1,10 +1,12 @@
 require('dotenv').config()
 
 const express = require('express')
+const path = require('path');
 const app = express()
 
 app.use(express.json())
 app.use(express.static('public'))
+
 
 const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY)
 
@@ -58,9 +60,6 @@ app.post("/account_link", async (req, res) => {
 
     const accountLink = await stripe.accountLinks.create({
       account: account,
-      //return_url: `${req.headers.origin}/return/${account}`,
-      //refresh_url: `${req.headers.origin}/refresh/${account}`,
-
       return_url: `${process.env.SERVER_URL}/index.html`,
       refresh_url: `${process.env.SERVER_URL}/index.html`,
       type: "account_onboarding",
@@ -77,12 +76,14 @@ app.post("/account_link", async (req, res) => {
   }
 });
 
-// sample items from inventory
-// const storeItems = new Map([
-//   [1, { priceCents: 10000, name: "OOP" }],
-//   [2, { priceCents: 20000, name: "CSS" }],
-// ])
+app.get('/success', async (req, res) => {
 
+  const session = await stripe.checkout.sessions.retrieve(req.query.session_id)
+  console.log(session);
+  res.sendFile(path.join(__dirname, 'public', 'success.html'));
+  return;
+
+})
 
 app.post('/checkout-session', async (req, res) => {
 
@@ -104,15 +105,14 @@ app.post('/checkout-session', async (req, res) => {
       payment_intent_data: {
         application_fee_amount: 123, // switch to cost*percentage
         transfer_data: {
-          //destination: '{{CONNECTED_ACCOUNT_ID}}'
           destination: 'acct_1R0EMhFWFoWYGzJM',
         },
       },
       mode: 'payment',
-      success_url: `${process.env.SERVER_URL}/success.html`,
+      success_url: `${process.env.SERVER_URL}/success?&session_id={CHECKOUT_SESSION_ID}`,
     });
 
-    res.json({ url: session.url });
+    res.json({ url: session.url});
     
   } catch (error) {
     res.status(500).json({error: error.message});
@@ -120,15 +120,6 @@ app.post('/checkout-session', async (req, res) => {
 
 
 });
-
-app.get('/success', async (req, res) => {
-
-  const session = await stripe.checkout.sessions.retrieve(req.query.session_id)
-  console.log(session);
-  res.send('Payment successful.');
-  return;
-
-})
 
 app.listen(3000, () => {
   console.log('Listening on port 3000...');
