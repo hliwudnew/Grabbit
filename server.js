@@ -8,45 +8,111 @@ app.use(express.static('public'))
 
 const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY)
 
+app.post('/payment-dashboard', async (req, res) => {
+
+  //const loginLink = await stripe.accounts.createLoginLink('{{CONNECTED_ACCOUNT_ID}}')
+  const loginLink = await stripe.accounts.createLoginLink('acct_1R0EMhFWFoWYGzJM')
+
+  res.json({ url: loginLink.url });
+
+});
+
+app.post("/account-connect", async (req, res) => {
+  try {
+    const account = await stripe.accounts.create({
+      country: 'CA',
+      email: req.body.email,
+      controller: {
+        stripe_dashboard: {
+          type: "express",
+        },
+        fees: {
+          payer: "application"
+        },
+        losses: {
+          payments: "application"
+        },
+      },
+      capabilities: {
+        transfers: { requested: true },
+      },
+    });
+    console.log(account.id);
+    res.json({
+      account: account.id,
+    });
+  } catch (error) {
+    console.error(
+      "An error occurred when calling the Stripe API to create an account",
+      error
+    );
+    res.status(500);
+    res.send({ error: error.message });
+  }
+});
+
+
+app.post("/account_link", async (req, res) => {
+  try {
+    const { account } = req.body;
+
+    const accountLink = await stripe.accountLinks.create({
+      account: account,
+      //return_url: `${req.headers.origin}/return/${account}`,
+      //refresh_url: `${req.headers.origin}/refresh/${account}`,
+
+      return_url: `${process.env.SERVER_URL}/index.html`,
+      refresh_url: `${process.env.SERVER_URL}/index.html`,
+      type: "account_onboarding",
+    });
+
+    res.json(accountLink);
+  } catch (error) {
+    console.error(
+      "An error occurred when calling the Stripe API to create an account link:",
+      error
+    );
+    res.status(500);
+    res.send({ error: error.message });
+  }
+});
+
 // sample items from inventory
-const storeItems = new Map([
-  [1, { priceCents: 10000, name: "OOP" }],
-  [2, { priceCents: 20000, name: "CSS" }],
-])
+// const storeItems = new Map([
+//   [1, { priceCents: 10000, name: "OOP" }],
+//   [2, { priceCents: 20000, name: "CSS" }],
+// ])
+
 
 app.post('/checkout-session', async (req, res) => {
 
   try {
 
     const session = await stripe.checkout.sessions.create({
-
-      payment_method_types: ['card'],
-      mode: 'payment',
-      invoice_creation: {
-        enabled: true
-      },
-      line_items: req.body.items.map(item =>{
-        const storeItem = storeItems.get(item.id);
-        return {
+      line_items: [
+        {
           price_data: {
             currency: 'cad',
             product_data: {
-              name: storeItem.name
+              name: 'T-shirt',
             },
-            unit_amount: storeItem.priceCents
+            unit_amount: 1000,
           },
-          quantity: item.quantity
-        }
-      }),
-      shipping_address_collection: {
-        allowed_countries: ['US', 'CA']
+          quantity: 1,
+        },
+      ],
+      payment_intent_data: {
+        application_fee_amount: 123, // switch to cost*percentage
+        transfer_data: {
+          //destination: '{{CONNECTED_ACCOUNT_ID}}'
+          destination: 'acct_1R0EMhFWFoWYGzJM',
+        },
       },
-      success_url: `${process.env.SERVER_URL}/success?&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.SERVER_URL}/cancel.html`
-
+      mode: 'payment',
+      success_url: `${process.env.SERVER_URL}/success.html`,
     });
 
-    res.json({ url: session.url }) // re-direct to stripe payment page
+    res.json({ url: session.url });
     
   } catch (error) {
     res.status(500).json({error: error.message});
