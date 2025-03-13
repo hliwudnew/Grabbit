@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import "../Styles/ListingsPage.css";
 import ListingTile from "../Components/ListingTile";
 import SortingSelect from "../Components/SortingSelect.js";
-
 function ListingsPage() {
   const [items, setItems] = useState([]);
   const location = useLocation();
@@ -38,10 +37,15 @@ function ListingsPage() {
       <div className="ListingsPage-header">
         <SortingSelect />
       </div>
-      <div className="ListingsPage-tiles">
-        {items.map((item) => (
-          <ListingTile key={item._id} data={item} />
-        ))}
+      <div className="ListingsPage-bottom">
+        <div className="ListingsPage-filters">
+          <h2>Filters</h2>
+        </div>
+        <div className="ListingsPage-tiles">
+          {items.map((item) => (
+            <ListingTile key={item._id} data={item} />
+          ))}
+        </div>
       </div>
     </div>
   );
