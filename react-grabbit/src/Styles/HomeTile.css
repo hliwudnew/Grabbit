@@ -1,0 +1,33 @@
+.HomeTile-container{
+    position: relative;
+    object-fit: fill;
+    width: 100%;
+    height: 100%;
+}
+
+.HomeTile-title{
+    position: absolute;
+    top: 8px;
+    left: 16px;
+    color: red;
+    text-align: center;
+    display: flex;
+}
+
+.HomeTile-img{
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
+.HomeTile-text{
+    color: white;
+    background-color: #685BE0;
+    padding: 10%;
+    cursor: pointer;
+}
+
+.HomeTile-text:hover{
+    color: #685BE0;
+    background-color: white;
+}

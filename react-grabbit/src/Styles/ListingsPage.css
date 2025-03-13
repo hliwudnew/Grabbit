@@ -1,0 +1,41 @@
+.ListingsPage-content{
+    text-align: center;
+    min-height: 100vh;
+    max-height: 100%;
+    margin: 5%;
+    margin-left: 0%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.ListingsPage-header{
+    display: flex;
+    justify-content: end;
+    margin-bottom: 2%;
+}
+
+.ListingsPage-tiles{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    /* column-gap: 5%;
+    row-gap: 5%; */
+    grid-gap: 5%;
+    height: 100%;
+    flex-grow: 1;
+}
+
+.ListingsPage-filters{
+    border: 2px solid grey;
+    max-width: 25%;
+    min-width: 15%;
+    margin-right: 5%;
+    background-color: white;
+}
+
+.ListingsPage-bottom{
+    display: flex;
+    height: 100%;
+    max-height: 100%;
+    min-width: 100%;
+}

@@ -1,0 +1,9 @@
+.ContactTile-container{
+    background-color: white;
+    display: flex;
+    align-items: center;
+    border-radius: 5%;
+    margin: 5%;
+    padding: 5%;
+    gap: 5%;
+}
