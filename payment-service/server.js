@@ -8,8 +8,11 @@ const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY)
 app.use(express.json())
 app.use(express.static('public'))
 
+const cors = require("cors");
+app.use(cors());
+
 // Seller Revenue Dashboard
-app.post('/payment-dashboard', async (req, res) => {
+app.post('/api/payment-dashboard', async (req, res) => {
 
   const loginLink = await stripe.accounts.createLoginLink('acct_1R0EMhFWFoWYGzJM')
   res.json({ url: loginLink.url });
@@ -17,7 +20,7 @@ app.post('/payment-dashboard', async (req, res) => {
 });
 
 // Create a Stripe Account For User
-app.post("/account-connect", async (req, res) => {
+app.post("/api/account-connect", async (req, res) => {
   try {
     const account = await stripe.accounts.create({
       country: 'CA',
@@ -52,7 +55,7 @@ app.post("/account-connect", async (req, res) => {
 });
 
 // Onboard User Stripe Account, Connect To Grabbit's Stripe Platform Account
-app.post("/account-link", async (req, res) => {
+app.post("/api/account-link", async (req, res) => {
   try {
     const { account } = req.body;
 
@@ -75,7 +78,7 @@ app.post("/account-link", async (req, res) => {
 });
 
 // Successful Payment Page
-app.get('/success', async (req, res) => {
+app.get('/api/success', async (req, res) => {
 
   const session = await stripe.checkout.sessions.retrieve(req.query.session_id)
   console.log(session);
@@ -85,7 +88,7 @@ app.get('/success', async (req, res) => {
 })
 
 // Stripe Checkout Page
-app.post('/checkout-session', async (req, res) => {
+app.post('/api/checkout-session', async (req, res) => {
 
   try {
 
@@ -95,15 +98,14 @@ app.post('/checkout-session', async (req, res) => {
           price_data: {
             currency: 'cad',
             product_data: {
-              name: 'T-shirt', // req.body.item_name
-            },
-            unit_amount: 1000, // In cents, req.body.costInCents
+              name: req.body.item_name,            },
+            unit_amount: req.body.price * 100, // In cents
           },
           quantity: 1,
         },
       ],
       payment_intent_data: {
-        application_fee_amount: 123, // switch to cost*percentage, (req.body.costInCents / 100) * percentage_that_we_want
+        application_fee_amount: req.body.price * 0.10, // 10% in fees that Grabbit earns per purchase
         transfer_data: {
           destination: 'acct_1R0EMhFWFoWYGzJM',
         },
@@ -121,6 +123,8 @@ app.post('/checkout-session', async (req, res) => {
 
 });
 
-app.listen(3000, () => {
-  console.log('Listening on port 3000...');
+const PORT = process.env.PORT || 5004;
+
+app.listen(PORT, () => {
+  console.log('Listening on port ' + PORT + '...');
 })

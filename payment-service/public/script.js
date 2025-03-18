@@ -4,7 +4,7 @@ checkoutbtn.addEventListener('click', () => {
 
     console.log("button clicked");
 
-    fetch('/checkout-session', {
+    fetch('/api/checkout-session', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -43,7 +43,7 @@ buyerdashboard.addEventListener('click', () => {
 
     console.log("button clicked");
 
-    fetch('/payment-dashboard', {
+    fetch('/api/payment-dashboard', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -75,7 +75,7 @@ stripeacc.addEventListener('click', () => {
 
     console.log("button clicked");
 
-    fetch('/account-connect', {
+    fetch('/api/account-connect', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -112,7 +112,7 @@ linkacc.addEventListener('click', () => {
 
     console.log("button clicked");
 
-    fetch("/account-link", {
+    fetch("/api/account-link", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
