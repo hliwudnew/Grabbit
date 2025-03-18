@@ -16,7 +16,24 @@ const itemSchema = new mongoose.Schema(
     category: { 
       type: String, 
       required: true, 
-      enum: ['electronics', 'clothing', 'books', 'furniture'] 
+      enum: [
+        'furniture', 
+        'plants', 
+        'tools', 
+        'lighting', 
+        'cleaning', 
+        'bedroom', 
+        'bathroom', 
+        'kitchen', 
+        'laptops', 
+        'tablets', 
+        'headphones', 
+        'speakers', 
+        'televisions', 
+        'gaming consoles', 
+        'video games', 
+        'pc parts'
+      ]
     },
     condition: { 
       type: String, 

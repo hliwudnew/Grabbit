@@ -47,12 +47,12 @@ function PostPage() {
     formData.append("category", category);
     formData.append("condition", condition);
     formData.append("delivery", delivery);
-    formData.append("image", imageFile); // Now always append, since image is required
+    formData.append("image", imageFile);
 
     try {
       const response = await fetch("http://localhost:5003/api/items", {
         method: "POST",
-        // When sending FormData, do not set Content-Type manually.
+        // Do not set Content-Type when sending FormData
         headers: {
           "Authorization": "Bearer " + localStorage.getItem("jwtToken")
         },
@@ -104,10 +104,24 @@ function PostPage() {
                 label="Category"
                 onChange={(e) => setCategory(e.target.value)}
               >
-                <MenuItem value={"electronics"}>Electronics</MenuItem>
-                <MenuItem value={"clothing"}>Clothing</MenuItem>
-                <MenuItem value={"books"}>Books</MenuItem>
+                {/* Home Improvement Categories */}
                 <MenuItem value={"furniture"}>Furniture</MenuItem>
+                <MenuItem value={"plants"}>Plants</MenuItem>
+                <MenuItem value={"tools"}>Tools</MenuItem>
+                <MenuItem value={"lighting"}>Lighting</MenuItem>
+                <MenuItem value={"cleaning"}>Cleaning</MenuItem>
+                <MenuItem value={"bedroom"}>Bedroom</MenuItem>
+                <MenuItem value={"bathroom"}>Bathroom</MenuItem>
+                <MenuItem value={"kitchen"}>Kitchen</MenuItem>
+                {/* Technology Categories */}
+                <MenuItem value={"laptops"}>Laptops</MenuItem>
+                <MenuItem value={"tablets"}>Tablets</MenuItem>
+                <MenuItem value={"headphones"}>Headphones</MenuItem>
+                <MenuItem value={"speakers"}>Speakers</MenuItem>
+                <MenuItem value={"televisions"}>Televisions</MenuItem>
+                <MenuItem value={"gaming consoles"}>Gaming Consoles</MenuItem>
+                <MenuItem value={"video games"}>Video games</MenuItem>
+                <MenuItem value={"pc parts"}>PC Parts</MenuItem>
               </Select>
             </FormControl>
             <h3>Condition</h3>
