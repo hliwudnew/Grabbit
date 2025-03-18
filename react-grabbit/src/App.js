@@ -76,7 +76,7 @@ function App() {
           <Route path ="/login" element={<LoginPage callBack={setUser}/>}/>
           <Route path ="/create-account" element={<CreateAccountPage/>}/>
           <Route path ="/notifications" element={<NotificationsPage/>}/>
-          <Route path ="/messages" element={<MessagesPage/>}/>
+          <Route path ="/messages" element={<MessagesPage user={user}/>}/>
           <Route path = "/details" element={<DetailsPage user={user}/>}/>
           <Route path ="/create" element={<PostPage/>}/>
           <Route path="/*" element={<ErrorPage/>}/>
