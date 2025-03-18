@@ -3,7 +3,7 @@ import { Button, TextField } from "@mui/material";
 import "../Styles/LoginPage.css";
 import { useNavigate } from "react-router-dom";
 
-function LoginPage({callBack}) {
+function LoginPage({ callBack }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,7 +14,6 @@ function LoginPage({callBack}) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-
         },
         body: JSON.stringify({ email, password }),
       });
@@ -28,23 +27,23 @@ function LoginPage({callBack}) {
       const json = await response.json();
       console.log("Response:", json);
       
-      // Save the token to localStorage so you can use it for authenticated requests
+      // Save the token to localStorage
       localStorage.setItem("jwtToken", json.token);
 
-      // Navigate to the account page upon successful login
-      requestProfile(json.token)
+      // Fetch the profile to get full user info and then store it
+      requestProfile(json.token);
     } catch (error) {
       console.error("Request failed:", error);
     }
   };
 
-  async function requestProfile(token){
-    try{
+  async function requestProfile(token) {
+    try {
       const response = await fetch("http://localhost:5002/api/users/profile", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
+          "Authorization": `Bearer ${token}`,
         },
       });
 
@@ -55,13 +54,13 @@ function LoginPage({callBack}) {
       }
 
       const json = await response.json();
-      console.log("Response:", json);
+      console.log("Profile response:", json);
 
-      //Provides user with their profile deatils for their account
-      callBack(json)
+      // Save user data in localStorage as well as update parent state
+      localStorage.setItem("user", JSON.stringify(json));
+      callBack(json);
       navigate("/account");
-    }
-    catch(error){
+    } catch (error) {
       console.error("Request failed:", error);
     }
   }

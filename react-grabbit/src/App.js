@@ -7,6 +7,7 @@ import CartPage from './Pages/CartPage.js';
 import AccountPage from './Pages/AccountPage.js';
 import ListingsPage from './Pages/ListingsPage.js';
 import CheckoutPage from './Pages/CheckoutPage.js';
+import MyListingsPage from './Pages/MyListingsPage.js';
 import TaskBar from './Components/TaskBar.js';
 import Footer from './Components/Footer.js';
 import LoginPage from './Pages/LoginPage.js';
@@ -74,6 +75,7 @@ function App() {
           <Route path="/account" element={<AccountPage callBack={setUser}/>}/>
           <Route path ="/listings" element={<ListingsPage/>}/>
           <Route path ="/login" element={<LoginPage callBack={setUser}/>}/>
+          <Route path="/my-listings" element={<MyListingsPage/>}/> {/* New route */}
           <Route path ="/create-account" element={<CreateAccountPage/>}/>
           <Route path ="/notifications" element={<NotificationsPage/>}/>
           <Route path ="/messages" element={<MessagesPage/>}/>
