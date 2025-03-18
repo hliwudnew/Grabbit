@@ -46,8 +46,13 @@ function DetailsPage({user}){
                 },
                 body: JSON.stringify(
                     {
-                        item_name: item.title,
-                        price: item.price
+                        title: item.title,
+                        description: item.description,
+                        price: item.price,
+                        seller: item.seller,
+                        category: item.category,
+                        condition: item.condition,
+                        delivery: item.delivery
                     }
                 )
             }).then(res => {

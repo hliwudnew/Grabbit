@@ -98,7 +98,8 @@ app.post('/api/checkout-session', async (req, res) => {
           price_data: {
             currency: 'cad',
             product_data: {
-              name: req.body.item_name,            },
+              name: req.body.title,
+            },
             unit_amount: req.body.price * 100, // In cents
           },
           quantity: 1,
