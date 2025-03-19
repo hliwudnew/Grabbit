@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "../Styles/ListingsPage.css";
-import ListingTile from "../Components/ListingTile";
+import ListingTile from "../Components/ListingTile.js";
 import SortingSelect from "../Components/SortingSelect.js";
 
-function ListingsPage() {
+function MyListingsPage() {
   const [items, setItems] = useState([]);
   const location = useLocation();
 
@@ -12,31 +12,19 @@ function ListingsPage() {
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
 
-  // Extract query parameters "q" and "category" from the URL
+  // Extract query parameters "q" and "category" from the URL (if filtering is desired)
   const queryParams = new URLSearchParams(location.search);
   const searchQuery = queryParams.get("q") || "";
   const categoryQuery = queryParams.get("category") || "";
 
   useEffect(() => {
-    let baseUrl = "";
-    if (user) {
-      // If a user is logged in, and there's a search or category filter,
-      // use the "others search" endpoint to exclude the current user's items.
-      if (searchQuery || categoryQuery) {
-        baseUrl = "http://localhost:5003/api/items/others/search";
-      } else {
-        baseUrl = "http://localhost:5003/api/items/others";
-      }
-    } else {
-      // If no user is logged in, use the public endpoints.
-      if (searchQuery || categoryQuery) {
-        baseUrl = "http://localhost:5003/api/items/search";
-      } else {
-        baseUrl = "http://localhost:5003/api/items";
-      }
-    }
+    if (!user) return; // Optionally, you might redirect to login if user is not available
 
-    let url = "";
+    // Base URL for current user's listings
+    let baseUrl = "http://localhost:5003/api/items/seller/myitems";
+
+    // If search or category filters are provided, append them
+    let url = baseUrl;
     if (searchQuery || categoryQuery) {
       let queryString = "";
       if (categoryQuery) {
@@ -46,15 +34,12 @@ function ListingsPage() {
         queryString += (queryString ? "&" : "") + `q=${encodeURIComponent(searchQuery)}`;
       }
       url = `${baseUrl}?${queryString}`;
-    } else {
-      url = baseUrl;
     }
 
-    // If a user is logged in, include the Authorization header.
-    const headers = {};
-    if (user) {
-      headers.Authorization = "Bearer " + localStorage.getItem("jwtToken");
-    }
+    // Set up headers to include the JWT token
+    const headers = {
+      Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+    };
 
     fetch(url, { headers })
       .then((response) => {
@@ -79,7 +64,7 @@ function ListingsPage() {
       <div className="ListingsPage-bottom">
         <div className="ListingsPage-filters">
           <h2>Filters</h2>
-          {/* You can add additional filter UI elements here if needed */}
+          {/* Additional filter UI can be added here if desired */}
         </div>
         <div className="ListingsPage-tiles">
           {items.map((item) => (
@@ -91,4 +76,4 @@ function ListingsPage() {
   );
 }
 
-export default ListingsPage;
+export default MyListingsPage;

@@ -40,9 +40,14 @@ function TaskBar({ cartIcon, user }) {
     return `hsl(${hash}, ${saturation}%, ${lightness}%)`;
   }
 
-  // When the search button is clicked, navigate to /listings with a query parameter
+  // Navigate with the search query
   const handleSearch = () => {
     navigate(`/listings?q=${encodeURIComponent(searchQuery)}`);
+  };
+
+  // New: Navigate to the "My Items for Sell" page
+  const handleMyItems = () => {
+    navigate("/my-listings");
   };
 
   return (
@@ -58,7 +63,8 @@ function TaskBar({ cartIcon, user }) {
           <h1>Grabbit</h1>
         </div>
         <div className="TaskBar-pages">
-          <button>DropDown</button>
+          {/* Updated dropdown button now navigates to My Items for Sell */}
+          <button onClick={handleMyItems}>My Items for Sell</button>
           <TextField
             size="small"
             style={{ width: "100%", borderRadius: "100%" }}
