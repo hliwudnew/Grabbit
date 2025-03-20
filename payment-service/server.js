@@ -11,14 +11,6 @@ app.use(express.static('public'))
 const cors = require("cors");
 app.use(cors());
 
-// Seller Revenue Dashboard
-app.post('/api/payment-dashboard', async (req, res) => {
-
-  const loginLink = await stripe.accounts.createLoginLink('acct_1R0EMhFWFoWYGzJM')
-  res.json({ url: loginLink.url });
-
-});
-
 // Create a Stripe Account For User
 app.post("/api/account-connect", async (req, res) => {
   try {
@@ -46,7 +38,7 @@ app.post("/api/account-connect", async (req, res) => {
     });
   } catch (error) {
     console.error(
-      "An error occurred when calling the Stripe API to create an account",
+      "An error occurred when calling the Stripe API to create an account. Error:",
       error
     );
     res.status(500);
@@ -86,6 +78,14 @@ app.get('/api/success', async (req, res) => {
   return;
 
 })
+
+// Seller Revenue Dashboard
+app.post('/api/payment-dashboard', async (req, res) => {
+
+  const loginLink = await stripe.accounts.createLoginLink('acct_1R0EMhFWFoWYGzJM')
+  res.json({ url: loginLink.url });
+
+});
 
 // Stripe Checkout Page
 app.post('/api/checkout-session', async (req, res) => {
