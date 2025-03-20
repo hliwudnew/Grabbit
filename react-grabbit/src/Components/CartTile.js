@@ -28,6 +28,10 @@ function CartTile({data: item}){
 
     function handlePurchase(){
         console.log("Send to Stripe API");
+        console.log("Item name:", item.title);
+        console.log("Item cost:", item.price);
+
+        
     }
 
     return(
