@@ -31,6 +31,7 @@ function CreateAccountPage() {
         // Registration was successful
         // Optionally store the token from json.token, e.g.:
         // localStorage.setItem("jwtToken", json.token);
+        requestCreateWatchlist(json.token)
         navigate("/login");
       } else {
         // Handle errors from the server (e.g., validation errors)
@@ -41,6 +42,30 @@ function CreateAccountPage() {
       // Optionally display an error message on the UI
     }
   };
+
+  async function requestCreateWatchlist(token){
+    try{
+      const response = await fetch("http://localhost:5002/api/watchlists/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Watchlist Fetch failed:", errorData.message);
+        return;
+      }
+
+      const json = await response.json();
+      //console.log("WatchList:", json);
+    }
+    catch(error){
+      console.error("Request failed:", error);
+    }
+  }
 
   return (
     <div className="CreateAccountPage-content">

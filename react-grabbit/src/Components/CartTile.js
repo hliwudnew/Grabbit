@@ -5,8 +5,9 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { EditWatchlist, EditWatchBadge, Watchlist } from "../App";
 import { useContext } from "react";
 import { Button } from "@mui/material";
+import {useNavigate } from "react-router-dom";
 function CartTile({data: item}){
-
+    const navigate = useNavigate();
     const set = useContext(EditWatchlist)
     const badge = useContext(EditWatchBadge);
     const watch = useContext(Watchlist);
@@ -17,13 +18,24 @@ function CartTile({data: item}){
 
     function handleRemove(){
         for(let i =0; i < watch.length; i++){
-            if(item.id === watch[i].id){
+            if(item._id === watch[i]._id){
               watch.splice(i,1);
               break;
             }
         }
+        requestRemoveItemWatchlist(item)
         set(watch);
         badge(watch.length);
+
+        //This fixes an issue with the page not updating specifically for a single item when pulling from the DB
+        //DO NOT CHANGE
+        if(watch.length <1){
+            navigate("/cart")
+        }
+    }
+
+    function handleDetails(){
+        navigate("/details",{state: {data:item}})
     }
 
     function handlePurchase(){
@@ -34,10 +46,39 @@ function CartTile({data: item}){
         
     }
 
+    async function requestRemoveItemWatchlist(item){
+        try{
+            const token = localStorage.getItem("jwtToken");
+            const response = await fetch("http://localhost:5002/api/watchlists/remove",{
+                method: "DELETE",
+                headers: {
+                  "Content-Type": "application/json",
+                  'Authorization': `Bearer ${token}`
+                },
+                body:JSON.stringify({
+                    itemID:item._id
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Remove from Watchlist Fetch failed:", errorData.message);
+                return;
+            }
+        
+            const json = await response.json();
+            console.log(json.message)
+        }
+        catch(error){
+            console.error("Request failed:", error);
+        }
+    }
+
+
     return(
         <div className="CartTile-content">
             <div className="CartTile-data">
-                <img style={{width:"5rem",height:"5rem"}} src={imageUrl}></img>
+                <img onClick={handleDetails} style={{width:"5rem",height:"5rem",cursor:"pointer"}} src={imageUrl}></img>
                 <p>{item.name}</p>
                 <p>${item.price}</p>
             </div>

@@ -34,6 +34,7 @@ function App() {
     const token = localStorage.getItem("jwtToken");
     if(token){
       requestProfile(token);
+      requestWatchlist(token);
     }
   },[])
 
@@ -62,6 +63,59 @@ function App() {
     }
   }
 
+  async function requestWatchlist(token){
+    try{
+      const response = await fetch("http://localhost:5002/api/watchlists/", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Watchlist Fetch failed:", errorData.message);
+        return;
+      }
+
+      const json = await response.json();
+      //console.log("WatchList:", json);
+      requestWatchlistItems(json.items)
+    }
+    catch(error){
+      console.error("Request failed:", error);
+    }
+  }
+
+  async function requestWatchlistItems(items){
+    try{
+      const response = await fetch("http://localhost:5003/api/items/many", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body:JSON.stringify({
+          itemIDs:items
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Watchlist Fetch failed:", errorData.message);
+        return;
+      }
+
+      const json = await response.json();
+      console.log("WatchList:", json);
+      setWatch(json);
+      setWatchIcon(json.length);
+    }
+    catch(error){
+      console.error("Request failed:", error);
+    }
+  }
+
   return (
     <div className="main-container">
       <TaskBar user={user} cartIcon={watchIcon}/>
@@ -74,11 +128,11 @@ function App() {
           <Route path="/checkout" element={<CheckoutPage/>}/>
           <Route path="/account" element={<AccountPage callBack={setUser}/>}/>
           <Route path ="/listings" element={<ListingsPage/>}/>
-          <Route path ="/login" element={<LoginPage callBack={setUser}/>}/>
+          <Route path ="/login" element={<LoginPage callBack={setUser} setWatch={setWatch}/>}/>
           <Route path="/my-listings" element={<MyListingsPage/>}/> {/* New route */}
           <Route path ="/create-account" element={<CreateAccountPage/>}/>
           <Route path ="/notifications" element={<NotificationsPage/>}/>
-          <Route path ="/messages" element={<MessagesPage/>}/>
+          <Route path ="/messages" element={<MessagesPage user={user}/>}/>
           <Route path = "/details" element={<DetailsPage user={user}/>}/>
           <Route path ="/create" element={<PostPage/>}/>
           <Route path="/*" element={<ErrorPage/>}/>

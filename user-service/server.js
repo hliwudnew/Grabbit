@@ -10,6 +10,7 @@ require('./models/user');
 
 const userRoutes = require('./routes/userRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const watchlistRoutes = require('./routes/watchlistRoutes');
 
 connectDB();
 
@@ -26,6 +27,9 @@ app.use('/api/users', userRoutes);
 
 // Mount messaging endpoints under /api/messages
 app.use('/api/messages', messageRoutes);
+
+// Mount watchlist endpoints under /api/watchlist
+app.use('/api/watchlists',watchlistRoutes);
 
 const PORT = process.env.PORT || 5002;
 app.listen(PORT, () => console.log(`User service running on port ${PORT}`));

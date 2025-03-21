@@ -3,7 +3,7 @@ import "../Styles/DetailsPage.css"
 import {useNavigate } from "react-router-dom";
 import Alert from '@mui/material/Alert';
 import CheckIcon from '@mui/icons-material/Check';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
 import { useContext } from "react";
@@ -28,9 +28,26 @@ function DetailsPage({user}){
 
 
     function handleAdded(){
+        requestAddToWatchlist();
         setAdded(true);
         set([...watch,item]);
         editBadge(watch.length + 1);
+    }
+
+    //Runs each page refresh on the page
+    //Makes sure no dupe of wishlists
+    useEffect(() =>{
+        checkInWatch()    
+    })
+
+
+    function checkInWatch(){
+        //Implment to check if the vehicle is already in cart, if so dont let them put it in cart
+        for(let i =0; i< watch.length; i++){
+            if(watch[i]._id === item._id){
+                setAdded(true)
+            }
+        }
     }
 
     function handlePurchase(){
@@ -107,6 +124,33 @@ function DetailsPage({user}){
         //     }
         //   };
 
+    }
+
+    async function requestAddToWatchlist() {
+        try{
+            const token = localStorage.getItem("jwtToken");
+            const response = await fetch("http://localhost:5002/api/watchlists/add",{
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                  'Authorization': `Bearer ${token}`
+                },
+                body:JSON.stringify({
+                    itemID:item._id
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Add Vehicle Fetch failed:", errorData.message);
+                return;
+            }
+        
+            const json = await response.json();
+        }
+        catch(error){
+            console.error("Request failed:", error);
+        }
     }
 
     function stringToHslColor(string, saturation, boldness) {
