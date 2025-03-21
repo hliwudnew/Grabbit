@@ -34,6 +34,10 @@ function CartTile({data: item}){
         }
     }
 
+    function handleDetails(){
+        navigate("/details",{state: {data:item}})
+    }
+
     function handlePurchase(){
         console.log("Send to Stripe API");
         console.log("Item name:", item.title);
@@ -74,7 +78,7 @@ function CartTile({data: item}){
     return(
         <div className="CartTile-content">
             <div className="CartTile-data">
-                <img style={{width:"5rem",height:"5rem"}} src={imageUrl}></img>
+                <img onClick={handleDetails} style={{width:"5rem",height:"5rem",cursor:"pointer"}} src={imageUrl}></img>
                 <p>{item.name}</p>
                 <p>${item.price}</p>
             </div>
