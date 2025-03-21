@@ -11,6 +11,7 @@ const {
   markItemAsSold,
   searchOtherItems,
   getOtherItems,
+  getMultipleItemsById,
   upload
 } = require('../controllers/itemController');
 const { protect } = require('../middleware/auth');
@@ -34,6 +35,7 @@ router.get('/', getItems);
 
 // Parameterized route for getting a specific item by ID (must come after the specific routes)
 router.get('/:id', getItemById);
+router.post("/many", getMultipleItemsById);
 
 // Endpoints for purchasing and marking as sold
 router.post('/:id/purchase', protect, purchaseItem);
