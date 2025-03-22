@@ -8,12 +8,15 @@ import { useLocation } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
 import { useContext } from "react";
 import { EditWatchlist, Watchlist, EditWatchBadge } from "../App.js";
+import ContactSeller from "../Modals/ContactSeller.js";
 function DetailsPage({user}){
     //Hook state, for naviation
     const navigate = useNavigate();
     const watch = useContext(Watchlist);
     const set = useContext(EditWatchlist);
     const editBadge = useContext(EditWatchBadge);
+
+    const [open,setOpen] = useState(false);
 
     //Used to grab the data sent from the listings page, to its specific details
     const { state } = useLocation();
@@ -158,7 +161,7 @@ function DetailsPage({user}){
         for (var i = 0; i < string.length; i++) {
         hash = string.charCodeAt(i) + ((hash << 5) - hash);
         }
-    
+
         hash = hash % 360;
         return 'hsl('+hash+', '+saturation+'%, '+boldness+'%)';
     }
@@ -187,17 +190,29 @@ function DetailsPage({user}){
                     <p>Shipping: $5 international or Free local</p>
                     {
                         user ?
-                        <>
-                            <Button onClick={handlePurchase} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Purchase</Button>
-                            {
-                                added ? 
-                                <Alert style={{marginBottom:"5%"}} icon={<CheckIcon fontSize="inherit" />} severity="success">Added to Your Watchlist</Alert> 
-                                : 
-                                <div style={{display:"flex", flexDirection:"column"}}>
-                                    <Button onClick={handleAdded} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Add to Watchlist</Button>
-                                </div>
-                            }
-                        </>
+                            !(user._id === item.seller._id)?
+                            <>
+                                {
+                                    !(item.delivery === "in-person")?
+                                    <Button onClick={handlePurchase} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Purchase</Button>
+                                    :
+                                    <>
+                                    <ContactSeller receiverID={item.seller._id} senderName={user.username} receiverName={item.seller.username}  open={open} close={() => setOpen(false)}/>
+                                    <Button onClick={() => setOpen(true)} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Contact Seller</Button>
+                                    </>
+                                }
+                                {
+                                    added ? 
+                                    <Alert style={{marginBottom:"5%"}} icon={<CheckIcon fontSize="inherit" />} severity="success">Added to Your Watchlist</Alert> 
+                                    : 
+                                    <div style={{display:"flex", flexDirection:"column"}}>
+                                        <Button onClick={handleAdded} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Add to Watchlist</Button>
+                                    </div>
+                                }
+                            </>
+                            :
+                            //Add the remove your own listing here
+                            <p>This is your own listing! Hope someone buys it!</p>
                         :
                         <Button onClick={() => navigate("/login")} style={{backgroundColor:"#685BE0", color:"white"}}>Login to Purchase</Button>
                     }

@@ -107,7 +107,7 @@ function App() {
       }
 
       const json = await response.json();
-      console.log("WatchList:", json);
+      //console.log("WatchList:", json);
       setWatch(json);
       setWatchIcon(json.length);
     }
@@ -124,11 +124,11 @@ function App() {
       <EditWatchBadge.Provider value={setWatchIcon}>
       <Routes>
           <Route path="/" element={<HomePage/>} />
-          <Route path="/cart" element={<CartPage/>}/>
+          <Route path="/cart" element={<CartPage user={user}/>}/>
           <Route path="/checkout" element={<CheckoutPage/>}/>
           <Route path="/account" element={<AccountPage callBack={setUser}/>}/>
           <Route path ="/listings" element={<ListingsPage/>}/>
-          <Route path ="/login" element={<LoginPage callBack={setUser} setWatch={setWatch}/>}/>
+          <Route path ="/login" element={<LoginPage callBack={setUser} setWatch={setWatch} setWatchIcon={setWatchIcon}/>}/>
           <Route path="/my-listings" element={<MyListingsPage/>}/> {/* New route */}
           <Route path ="/create-account" element={<CreateAccountPage/>}/>
           <Route path ="/notifications" element={<NotificationsPage/>}/>

@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 import {useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { Watchlist } from "../App.js";
-function CartPage(){
+function CartPage({user}){
     //Hook state, for naviation
     const navigate = useNavigate();
     const watchlist = useContext(Watchlist);
@@ -22,7 +22,7 @@ function CartPage(){
                             watchlist ?
                             watchlist.map((item)=>{
                                 return(
-                                    <CartTile data={item}/>
+                                    <CartTile user={user} data={item}/>
                                 )
                             })
                             :
