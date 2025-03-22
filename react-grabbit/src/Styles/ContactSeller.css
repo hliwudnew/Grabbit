@@ -1,0 +1,37 @@
+.ContactSellerModal-container{
+    position: fixed;
+    top:20%;
+    left:50%;
+    transform: translate(-50%,50%);
+    background-color: #FFF;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 50%;
+    max-width: 100%;
+    /* max-width: fit-content; */
+}
+
+.ContactSellerModal-holder{
+    padding: 50px;
+    padding-top: 0;
+}
+
+.ContactSellerModal-overlay{
+    position: fixed;
+    top:0;
+    left: 0;
+    right:0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 1000;
+}
+
+.ContactSellerModal-content{
+    width: 100%;
+}
+
+.ContactSellerModal-header{
+
+}

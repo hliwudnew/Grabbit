@@ -6,7 +6,7 @@ const {
   getUserProfile,
   addNotification,
   getNotifications,
-  changePassword  
+  changePassword
 } = require('../controllers/userController');
 const { protect } = require('../middleware/auth');
 

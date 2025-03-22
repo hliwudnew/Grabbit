@@ -3,7 +3,7 @@ import { Button, TextField } from "@mui/material";
 import "../Styles/LoginPage.css";
 import { useNavigate } from "react-router-dom";
 
-function LoginPage({callBack,setWatch}) {
+function LoginPage({callBack,setWatch,setWatchIcon}) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -111,6 +111,7 @@ function LoginPage({callBack,setWatch}) {
       const json = await response.json();
       console.log("WatchList:", json);
       setWatch(json);
+      setWatchIcon(json.length);
     }
     catch(error){
       console.error("Request failed:", error);

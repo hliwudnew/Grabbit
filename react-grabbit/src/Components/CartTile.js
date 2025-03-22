@@ -3,14 +3,17 @@ import bike from "../Images/bike.jpg";
 import IconButton from '@mui/material/IconButton';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { EditWatchlist, EditWatchBadge, Watchlist } from "../App";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Button } from "@mui/material";
 import {useNavigate } from "react-router-dom";
-function CartTile({data: item}){
+import ContactSeller from "../Modals/ContactSeller";
+function CartTile({user,data: item}){
     const navigate = useNavigate();
     const set = useContext(EditWatchlist)
     const badge = useContext(EditWatchBadge);
     const watch = useContext(Watchlist);
+
+    const [open,setOpen] = useState(false)
 
     const imageUrl = item.imageUrl 
     ? `http://localhost:5003${item.imageUrl}` 
@@ -79,11 +82,26 @@ function CartTile({data: item}){
         <div className="CartTile-content">
             <div className="CartTile-data">
                 <img onClick={handleDetails} style={{width:"5rem",height:"5rem",cursor:"pointer"}} src={imageUrl}></img>
-                <p>{item.name}</p>
+                <p>{item.title}</p>
                 <p>${item.price}</p>
             </div>
             <div>
-                <Button onClick={handlePurchase} variant="contianed" style={{backgroundColor:"#685BE0", color:"white"}}>Purchase</Button>
+                {
+                    user?
+                    <>
+                    {
+                        !(item.delivery === "in-person")?
+                        <Button onClick={handlePurchase} variant="contianed" style={{backgroundColor:"#685BE0", color:"white"}}>Purchase</Button>
+                        :
+                        <>
+                        <ContactSeller receiverID={item.seller._id} senderName={user.username} receiverName={item.seller.username}  open={open} close={() => setOpen(false)}/>
+                        <Button onClick={() => setOpen(true)} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Contact Seller</Button>
+                        </>
+                    }
+                    </>
+                    :
+                    <p>Re-login</p>
+                }
             </div>
             <div className="CartTile-remove" style={{display:"flex", justifyContent:"right"}}>
                 <IconButton onClick={handleRemove}>
