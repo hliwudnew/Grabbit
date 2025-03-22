@@ -130,7 +130,7 @@ function App() {
           <Route path ="/listings" element={<ListingsPage/>}/>
           <Route path ="/login" element={<LoginPage callBack={setUser} setWatch={setWatch} setWatchIcon={setWatchIcon}/>}/>
           <Route path="/my-listings" element={<MyListingsPage/>}/> {/* New route */}
-          <Route path ="/create-account" element={<CreateAccountPage/>}/>
+          <Route path ="/create-account" element={<CreateAccountPage callBack={setUser} setWatch={setWatch} setWatchIcon={setWatchIcon}/>}/>
           <Route path ="/notifications" element={<NotificationsPage/>}/>
           <Route path ="/messages" element={<MessagesPage user={user}/>}/>
           <Route path = "/details" element={<DetailsPage user={user}/>}/>
