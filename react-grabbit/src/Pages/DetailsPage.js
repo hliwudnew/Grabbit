@@ -1,135 +1,103 @@
+// DetailsPage.js
 import { Button } from "@mui/material";
-import "../Styles/DetailsPage.css"
-import {useNavigate } from "react-router-dom";
+import "../Styles/DetailsPage.css";
+import { useNavigate, useLocation } from "react-router-dom";
 import Alert from '@mui/material/Alert';
 import CheckIcon from '@mui/icons-material/Check';
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useContext } from "react";
 import Avatar from '@mui/material/Avatar';
-import { useContext } from "react";
 import { EditWatchlist, Watchlist, EditWatchBadge } from "../App.js";
 import ContactSeller from "../Modals/ContactSeller.js";
-function DetailsPage({user}){
-    //Hook state, for naviation
-    const navigate = useNavigate();
-    const watch = useContext(Watchlist);
-    const set = useContext(EditWatchlist);
-    const editBadge = useContext(EditWatchBadge);
 
-    const [open,setOpen] = useState(false);
+function DetailsPage({ user }) {
+  const navigate = useNavigate();
+  const watch = useContext(Watchlist);
+  const setWatch = useContext(EditWatchlist);
+  const editBadge = useContext(EditWatchBadge);
+  const [open, setOpen] = useState(false);
+  const { state } = useLocation();
+  const item = state.data;
+  const [added, setAdded] = useState(false);
 
-    //Used to grab the data sent from the listings page, to its specific details
-    const { state } = useLocation();
-    const item = state.data;
-    //Changes UI to show purchased
-    const [added,setAdded] = useState(false);
-
-
-    const imageUrl = item.imageUrl 
+  const imageUrl = item.imageUrl 
     ? `http://localhost:5003${item.imageUrl}` 
     : "https://via.placeholder.com/150";
 
+  function handleAdded() {
+    // Call any API to add to watchlist if needed
+    setAdded(true);
+    setWatch([...watch, item]);
+    editBadge(watch.length + 1);
+  }
 
-    function handleAdded(){
-        requestAddToWatchlist();
-        setAdded(true);
-        set([...watch,item]);
-        editBadge(watch.length + 1);
-    }
-
-    //Runs each page refresh on the page
+      //Runs each page refresh on the page
     //Makes sure no dupe of wishlists
     useEffect(() =>{
-        checkInWatch()    
-    })
+      checkInWatch()    
+  })
 
 
-    function checkInWatch(){
-        //Implment to check if the vehicle is already in cart, if so dont let them put it in cart
-        for(let i =0; i< watch.length; i++){
-            if(watch[i]._id === item._id){
-                setAdded(true)
-            }
-        }
-    }
-
-    
-    function handlePurchase() {
-      console.log("Send to stripe API");
-      console.log("Item name:", item.title);
-      console.log("Item cost:", item.price);
-      console.log("Seller object:", item.seller);
-    
-      try {
-        fetch("http://localhost:5004/api/checkout-session", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: item.title,
-            price: item.price,
-            itemId: item._id,
-            sellerAccount: item.seller.stripeAccountId  // should be a valid Stripe account ID
-          }),
-        })
-          .then((res) => {
-            if (!res.ok) {
-              return res.json().then(json => Promise.reject(json));
-            }
-            return res.json();
-          })
-          .then(({ url }) => {
-            window.location = url;
-          })
-          .catch((e) => {
-            console.error(e.error);
-          });
-      } catch (error) {
-        console.error("Payment request failed:", error);
+  function checkInWatch(){
+      //Implment to check if the vehicle is already in cart, if so dont let them put it in cart
+      for(let i =0; i< watch.length; i++){
+          if(watch[i]._id === item._id){
+              setAdded(true)
+          }
       }
+  }
+
+  function handlePurchase() {
+    console.log("Send to stripe API");
+    console.log("Item name:", item.title);
+    console.log("Item cost:", item.price);
+    console.log("Seller object:", item.seller);
+
+    // Make sure the seller object includes stripeAccountId
+    if (!item.seller.stripeAccountId) {
+      console.error("Seller stripe account not set on this item.");
+      return;
     }
 
-    async function requestAddToWatchlist() {
-        try{
-            const token = localStorage.getItem("jwtToken");
-            const response = await fetch("http://localhost:5002/api/watchlists/add",{
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                  'Authorization': `Bearer ${token}`
-                },
-                body:JSON.stringify({
-                    itemID:item._id
-                }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error("Add Vehicle Fetch failed:", errorData.message);
-                return;
-            }
-        
-            const json = await response.json();
+    try {
+      fetch("http://localhost:5004/api/checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: item.title,
+          price: item.price,
+          itemId: item._id,
+          sellerAccount: item.seller.stripeAccountId  // Pass seller's stripe account ID
+        }),
+      })
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then(json => Promise.reject(json));
         }
-        catch(error){
-            console.error("Request failed:", error);
-        }
+        return res.json();
+      })
+      .then(({ url }) => {
+        window.location.href = url;
+      })
+      .catch((e) => {
+        console.error(e.error);
+      });
+    } catch (error) {
+      console.error("Payment request failed:", error);
     }
+  }
 
-    async function handleRemoveLisiting() {
-        console.log("Remove from database");
+  async function handleRemoveLisiting() {
+    console.log("Remove from database");
+  }
+
+  function stringToHslColor(string, saturation, lightness) {
+    let hash = 0;
+    for (let i = 0; i < string.length; i++) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
     }
-
-    function stringToHslColor(string, saturation, boldness) {
-        var hash = 0;
-        for (var i = 0; i < string.length; i++) {
-        hash = string.charCodeAt(i) + ((hash << 5) - hash);
-        }
-
-        hash = hash % 360;
-        return 'hsl('+hash+', '+saturation+'%, '+boldness+'%)';
-    }
+    hash = hash % 360;
+    return `hsl(${hash}, ${saturation}%, ${lightness}%)`;
+  }
 
     return(
         <div className="DetailsPage-container">

@@ -2,13 +2,13 @@
 import "../Styles/CreateAccountPage.css";
 import { Button, TextField, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
 
-function CreateAccountPage({callBack,setWatch,setWatchIcon}) {
+function CreateAccountPage({callBack,setWatch,setWatchIcon}){
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   /* 
   #######################
@@ -20,11 +20,7 @@ function CreateAccountPage({callBack,setWatch,setWatchIcon}) {
       const response = await fetch("http://localhost:5002/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username,
-          email,
-          password,
-        }),
+        body: JSON.stringify({ username, email, password }),
       });
 
       const json = await response.json();
@@ -229,6 +225,6 @@ function CreateAccountPage({callBack,setWatch,setWatchIcon}) {
       </div>
     </div>
   );
-}
+};
 
 export default CreateAccountPage;

@@ -8,7 +8,6 @@ exports.createItem = async (req, res) => {
     const { title, description, price, category, condition, delivery } = req.body;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
     
-    // Ensure the request is authenticated (should have been checked by protect middleware)
     if (!req.user) {
       return res.status(401).json({ message: 'Not authorized' });
     }

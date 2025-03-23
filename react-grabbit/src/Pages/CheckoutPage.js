@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { TextField, Button, Alert } from "@mui/material";
 import "../Styles/CheckoutPage.css";
 import CheckoutTile from "../Components/CheckoutTile";
+// Import Stripe Elements
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
 function CheckoutPage() {
@@ -17,6 +18,8 @@ function CheckoutPage() {
   const [processing, setProcessing] = useState(false);
   const [paymentError, setPaymentError] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState("");
+
+  // Example billing state; you can extend it as needed
   const [billingInfo, setBillingInfo] = useState({
     fullName: "",
     email: "",
@@ -31,22 +34,23 @@ function CheckoutPage() {
     setPaymentError("");
 
     try {
-      // Call your payment service to create a Stripe Checkout session
+      // Call your payment service endpoint to create a Stripe Checkout session
       const response = await fetch("http://localhost:5004/api/checkout-session", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+          "Authorization": "Bearer " + localStorage.getItem("jwtToken"),
         },
         body: JSON.stringify({
           title: "Order Total",
-          price: total // Backend converts to cents
+          price: total, // Backend should convert dollars to cents
         }),
       });
 
       const data = await response.json();
+
       if (response.ok && data.url) {
-        // Redirect to Stripe Checkout page
+        // Redirect the browser to the Stripe Checkout page
         window.location.href = data.url;
       } else {
         throw new Error(data.error || "Payment session creation failed");
