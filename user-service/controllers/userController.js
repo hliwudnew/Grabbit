@@ -17,29 +17,30 @@ const generateToken = (user) => {
   );
 };
 
+// controllers/userController.js
 exports.registerUser = async (req, res) => {
   const { username, email, password } = req.body;
   try {
+    // Check if the user exists
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
     }
-
     // Create new user
     let user = await User.create({ username, email, password });
 
     // Create a Stripe Connect account for the seller (Express)
-   // In your userController.js when registering a seller
-const account = await stripe.accounts.create({
-  type: 'express',
-  country: 'CA', // adjust as needed
-  email: req.body.email,
-  capabilities: {
-    transfers: { requested: true },
-  },
-});
-user.stripeAccountId = account.id;
-await user.save();
+    const account = await stripe.accounts.create({
+      type: 'express',
+      country: 'CA',
+      email: email,
+      capabilities: { transfers: { requested: true } },
+      business_profile: { url: process.env.CLIENT_URL } // This URL must begin with http:// or https://
+    });
+
+    // Save the connected account ID on the user
+    user.stripeAccountId = account.id;
+    await user.save();
 
     res.status(201).json({
       _id: user._id,
