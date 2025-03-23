@@ -158,9 +158,8 @@ function App() {
               <Route path="/messages" element={<MessagesPage user={user} />} />
               <Route path="/details" element={<DetailsPage user={user} />} />
               <Route path="/create" element={<PostPage />} />
+              <Route path="/onboarding" element={<StripeOnboarding />} />
               <Route path="/*" element={<ErrorPage />} />
-              // Inside your Routes (make sure to import StripeOnboarding)
-<Route path="/onboarding" element={<StripeOnboarding stripeAccountId={user?.stripeAccountId} />} />
             </Routes>
           </EditWatchBadge.Provider>
         </EditWatchlist.Provider>

@@ -1,50 +1,39 @@
 // src/Components/StripeOnboarding.js
-import React, { useEffect, useState } from 'react';
-import { Alert, Button } from '@mui/material';
+import React, { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
-function StripeOnboarding({ stripeAccountId }) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  const handleOnboard = async () => {
-    try {
-      const response = await fetch('http://localhost:5004/api/account-link', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ account: stripeAccountId }),
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to create account link');
-      }
-      // Redirect to Stripe-hosted onboarding page
-      window.location.href = data.url;
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
-  };
+function StripeOnboarding() {
+  const [searchParams] = useSearchParams();
+  const accountId = searchParams.get("accountId");
 
   useEffect(() => {
-    if (stripeAccountId) {
-      handleOnboard();
-    } else {
-      setError('No Stripe account ID provided.');
-      setLoading(false);
+    async function onboard() {
+      if (!accountId) {
+        console.error("No account ID provided for onboarding");
+        return;
+      }
+      try {
+        const response = await fetch("http://localhost:5004/api/account-link", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ account: accountId })
+        });
+        const data = await response.json();
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          console.error("No onboarding URL received", data);
+        }
+      } catch (error) {
+        console.error("Error during Stripe onboarding:", error);
+      }
     }
-  }, [stripeAccountId]);
+    onboard();
+  }, [accountId]);
 
   return (
     <div>
-      {loading && <p>Redirecting to Stripe onboarding...</p>}
-      {error && (
-        <>
-          <Alert severity="error">{error}</Alert>
-          <Button variant="contained" onClick={handleOnboard}>
-            Try Again
-          </Button>
-        </>
-      )}
+      <p>Redirecting to Stripe onboarding...</p>
     </div>
   );
 }
