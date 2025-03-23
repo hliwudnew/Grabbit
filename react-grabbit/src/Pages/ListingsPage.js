@@ -18,25 +18,22 @@ function ListingsPage() {
   const categoryQuery = queryParams.get("category") || "";
 
   useEffect(() => {
-    let baseUrl = "";
+    // Determine base URL: if a user is logged in, use the "others" endpoints
+    let baseUrl;
     if (user) {
-      // If a user is logged in, and there's a search or category filter,
-      // use the "others search" endpoint to exclude the current user's items.
-      if (searchQuery || categoryQuery) {
-        baseUrl = "http://localhost:5003/api/items/others/search";
-      } else {
-        baseUrl = "http://localhost:5003/api/items/others";
-      }
+      baseUrl =
+        searchQuery || categoryQuery
+          ? "http://localhost:5003/api/items/others/search"
+          : "http://localhost:5003/api/items/others";
     } else {
-      // If no user is logged in, use the public endpoints.
-      if (searchQuery || categoryQuery) {
-        baseUrl = "http://localhost:5003/api/items/search";
-      } else {
-        baseUrl = "http://localhost:5003/api/items";
-      }
+      baseUrl =
+        searchQuery || categoryQuery
+          ? "http://localhost:5003/api/items/search"
+          : "http://localhost:5003/api/items";
     }
 
-    let url = "";
+    // Build final URL with query parameters if provided
+    let url = baseUrl;
     if (searchQuery || categoryQuery) {
       let queryString = "";
       if (categoryQuery) {
@@ -46,11 +43,9 @@ function ListingsPage() {
         queryString += (queryString ? "&" : "") + `q=${encodeURIComponent(searchQuery)}`;
       }
       url = `${baseUrl}?${queryString}`;
-    } else {
-      url = baseUrl;
     }
 
-    // If a user is logged in, include the Authorization header.
+    // Set up headers (include Authorization header if user is logged in)
     const headers = {};
     if (user) {
       headers.Authorization = "Bearer " + localStorage.getItem("jwtToken");
@@ -79,7 +74,7 @@ function ListingsPage() {
       <div className="ListingsPage-bottom">
         <div className="ListingsPage-filters">
           <h2>Filters</h2>
-          {/* You can add additional filter UI elements here if needed */}
+          {/* Add additional filter UI elements if needed */}
         </div>
         <div className="ListingsPage-tiles">
           {items.map((item) => (

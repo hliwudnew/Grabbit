@@ -1,6 +1,7 @@
+// src/App.js
 import './Styles/App.css';
-import {Routes, Route} from 'react-router-dom';
-import React, { useEffect, useState, useRef } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState, createContext } from 'react';
 import HomePage from './Pages/HomePage.js';
 import ErrorPage from './Pages/ErrorPage.js';
 import CartPage from './Pages/CartPage.js';
@@ -16,77 +17,76 @@ import NotificationsPage from './Pages/NotificationsPage.js';
 import MessagesPage from './Pages/MessagesPage.js';
 import DetailsPage from './Pages/DetailsPage.js';
 import PostPage from './Pages/PostPage.js';
-import { createContext } from 'react';
+import StripeOnboarding from "./Components/StripeOnboarding";
 
 export const Watchlist = createContext();
 export const EditWatchlist = createContext();
 export const EditWatchBadge = createContext();
-// export const User = createContext();
 
 function App() {
+  const [watch, setWatch] = useState([]);
+  const [watchIcon, setWatchIcon] = useState(0);
+  const [user, setUser] = useState(null);
 
-  const [watch,setWatch] = useState([]);
-  const [watchIcon,setWatchIcon] = useState(0);
-  const [user,setUser] = useState()
-
-  //Checks if logged in previously
-  useEffect(() =>{
+  // Check for stored JWT token and load user profile if available
+  useEffect(() => {
     const token = localStorage.getItem("jwtToken");
-    if(token){
+    if (token) {
       requestProfile(token);
     }
-  },[])
+  }, []);
 
-  async function requestProfile(token){
-    try{
+  async function requestProfile(token) {
+    try {
       const response = await fetch("http://localhost:5002/api/users/profile", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
+          "Authorization": `Bearer ${token}`
         },
       });
-
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Profile Fetch failed:", errorData.message);
+        console.error("Profile fetch failed:", errorData.message);
         return;
       }
-
       const json = await response.json();
-      console.log("Response:", json);
+      console.log("Profile response:", json);
       setUser(json);
-    }
-    catch(error){
+      // Also store the full user info for later use
+      localStorage.setItem("user", JSON.stringify(json));
+    } catch (error) {
       console.error("Request failed:", error);
     }
   }
 
   return (
     <div className="main-container">
-      <TaskBar user={user} cartIcon={watchIcon}/>
+      <TaskBar user={user} cartIcon={watchIcon} />
       <Watchlist.Provider value={watch}>
-      <EditWatchlist.Provider value={setWatch}>
-      <EditWatchBadge.Provider value={setWatchIcon}>
-      <Routes>
-          <Route path="/" element={<HomePage/>} />
-          <Route path="/cart" element={<CartPage/>}/>
-          <Route path="/checkout" element={<CheckoutPage/>}/>
-          <Route path="/account" element={<AccountPage callBack={setUser}/>}/>
-          <Route path ="/listings" element={<ListingsPage/>}/>
-          <Route path ="/login" element={<LoginPage callBack={setUser}/>}/>
-          <Route path="/my-listings" element={<MyListingsPage/>}/> {/* New route */}
-          <Route path ="/create-account" element={<CreateAccountPage/>}/>
-          <Route path ="/notifications" element={<NotificationsPage/>}/>
-          <Route path ="/messages" element={<MessagesPage/>}/>
-          <Route path = "/details" element={<DetailsPage user={user}/>}/>
-          <Route path ="/create" element={<PostPage/>}/>
-          <Route path="/*" element={<ErrorPage/>}/>
-      </Routes>
-      </EditWatchBadge.Provider>
-      </EditWatchlist.Provider>
+        <EditWatchlist.Provider value={setWatch}>
+          <EditWatchBadge.Provider value={setWatchIcon}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/account" element={<AccountPage callBack={setUser} />} />
+              <Route path="/listings" element={<ListingsPage />} />
+              <Route path="/login" element={<LoginPage callBack={setUser} />} />
+              <Route path="/my-listings" element={<MyListingsPage />} />
+              <Route path="/create-account" element={<CreateAccountPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/messages" element={<MessagesPage />} />
+              <Route path="/details" element={<DetailsPage user={user} />} />
+              <Route path="/create" element={<PostPage />} />
+              <Route path="/*" element={<ErrorPage />} />
+              // Inside your Routes (make sure to import StripeOnboarding)
+<Route path="/onboarding" element={<StripeOnboarding stripeAccountId={user?.stripeAccountId} />} />
+            </Routes>
+          </EditWatchBadge.Provider>
+        </EditWatchlist.Provider>
       </Watchlist.Provider>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

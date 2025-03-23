@@ -1,16 +1,39 @@
+// controllers/itemController.js
 const Item = require('../models/item');
 const mongoose = require('mongoose');
 
-// Create a new item listing with image upload
+// controllers/itemController.js
 exports.createItem = async (req, res) => {
   try {
-    console.log("Authenticated user:", req.user);
     const { title, description, price, category, condition, delivery } = req.body;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
-    // Embed seller info from req.user (auth middleware sets _id and username)
-    const seller = { _id: req.user._id, username: req.user.username || "DefaultName" };
+    
+    // Ensure the request is authenticated (should have been checked by protect middleware)
+    if (!req.user) {
+      return res.status(401).json({ message: 'Not authorized' });
+    }
+    
+    // Build seller object from token data
+    const seller = { 
+      _id: req.user.id, 
+      username: req.user.username || "DefaultName", 
+      stripeAccountId: req.user.stripeAccountId  // Must be set in the token
+    };
 
-    const item = await Item.create({ title, description, price, category, condition, delivery, seller, imageUrl });
+    if (!seller.stripeAccountId) {
+      return res.status(400).json({ message: 'Seller stripe account not set' });
+    }
+
+    const item = await Item.create({ 
+      title, 
+      description, 
+      price, 
+      category, 
+      condition, 
+      delivery, 
+      seller, 
+      imageUrl 
+    });
     res.status(201).json(item);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -47,7 +70,8 @@ exports.purchaseItem = async (req, res) => {
     const item = await Item.findById(req.params.id);
     if (!item) return res.status(404).json({ message: 'Item not found' });
     if (item.purchased) return res.status(400).json({ message: 'Item already purchased' });
-
+    
+    // Mark the item as purchased and record the buyer from the authenticated user
     item.purchased = true;
     item.buyer = req.user._id;
     await item.save();
@@ -57,11 +81,11 @@ exports.purchaseItem = async (req, res) => {
   }
 };
 
-// Get items listed by the seller (i.e. current user)
+// Get items listed by the seller (i.e. current user) that are still active
 exports.getSellerItems = async (req, res) => {
   try {
-    // Query using embedded seller object field "seller._id"
-    const items = await Item.find({ "seller._id": req.user._id })
+    // Use req.user.id (or req.user._id if you standardized it) and filter purchased: false
+    const items = await Item.find({ "seller._id": req.user.id, purchased: false })
       .populate('buyer', 'username email');
     res.json(items);
   } catch (error) {
@@ -126,10 +150,12 @@ exports.markItemAsSold = async (req, res) => {
 };
 
 // Search for items not listed by the current user ("others" search)
+// Search for items not listed by the current user ("others" search)
 exports.searchOtherItems = async (req, res) => {
   try {
     const { q, minPrice, maxPrice, category } = req.query;
-    let filter = { purchased: false, "seller._id": { $ne: req.user._id } };
+    // Use req.user.id here
+    let filter = { purchased: false, "seller._id": { $ne: req.user.id } };
 
     if (q) {
       filter.$or = [
@@ -145,6 +171,7 @@ exports.searchOtherItems = async (req, res) => {
     if (category) {
       filter.category = category;
     }
+    console.log("Filter for others search:", filter);
     const items = await Item.find(filter).populate('seller', 'username email');
     res.json(items);
   } catch (error) {
@@ -155,10 +182,9 @@ exports.searchOtherItems = async (req, res) => {
 // Get items not created by the current user (others) without additional filters
 exports.getOtherItems = async (req, res) => {
   try {
-    const userId = new mongoose.Types.ObjectId(req.user._id);
     const items = await Item.find({
       purchased: false,
-      "seller._id": { $ne: userId }
+      "seller._id": { $ne: req.user.id }
     }).populate('seller', 'username email');
     res.json(items);
   } catch (error) {
@@ -166,9 +192,9 @@ exports.getOtherItems = async (req, res) => {
   }
 };
 
-// Export multer upload middleware for use in routes
 const multer = require('multer');
 const path = require('path');
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/');
@@ -178,6 +204,7 @@ const storage = multer.diskStorage({
     cb(null, file.fieldname + '-' + Date.now() + ext);
   }
 });
+
 const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image/")) {
     cb(null, true);
@@ -185,4 +212,14 @@ const fileFilter = (req, file, cb) => {
     cb(new Error("Not an image! Please upload an image file."), false);
   }
 };
+
+exports.upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 50 * 1024 * 1024 } // 50 MB limit
+});
+
+
+
 exports.upload = multer({ storage, fileFilter });
+

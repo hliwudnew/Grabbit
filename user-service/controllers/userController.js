@@ -1,36 +1,64 @@
 // controllers/userController.js
+require('dotenv').config(); 
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
 
-// Generate a JWT token
+// Generate a JWT token that includes stripeAccountId
 const generateToken = (user) => {
-  // Include username in the payload
-  return jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1d' });
+  return jwt.sign(
+    { 
+      id: user._id, 
+      username: user.username, 
+      stripeAccountId: user.stripeAccountId  // include this field
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: '1d' }
+  );
 };
 
-// Register a new user
 exports.registerUser = async (req, res) => {
   const { username, email, password } = req.body;
   try {
-    // Check if the user exists
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
     }
+
     // Create new user
-    const user = await User.create({ username, email, password });
+    let user = await User.create({ username, email, password });
+
+    // Create a Stripe Connect account for the seller (Express)
+   // In your userController.js when registering a seller
+const account = await stripe.accounts.create({
+  type: 'express',
+  country: 'CA', // adjust as needed
+  email: req.body.email,
+  capabilities: {
+    transfers: { requested: true },
+  },
+});
+user.stripeAccountId = account.id;
+await user.save();
+
     res.status(201).json({
       _id: user._id,
       username: user.username,
       email: user.email,
+      stripeAccountId: user.stripeAccountId,
       token: generateToken(user)
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    // Check for duplicate key error
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern)[0];
+      return res.status(400).json({ message: `Duplicate ${field} error. Please choose a different ${field}.` });
+    }
+    console.error("Registration error:", error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
-// Login user
 exports.authUser = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -40,6 +68,7 @@ exports.authUser = async (req, res) => {
         _id: user._id,
         username: user.username,
         email: user.email,
+        stripeAccountId: user.stripeAccountId, // add this line
         token: generateToken(user)
       });
     } else {
@@ -49,6 +78,7 @@ exports.authUser = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 // Example: Get user profile (protected route)
 exports.getUserProfile = async (req, res) => {

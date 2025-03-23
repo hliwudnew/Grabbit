@@ -9,7 +9,8 @@ const itemSchema = new mongoose.Schema(
     // Instead of referencing User, store an object with seller details:
     seller: {
       _id: { type: mongoose.Schema.Types.ObjectId, required: true },
-      username: { type: String, required: true }
+      username: { type: String, required: true },
+      stripeAccountId: { type: String } 
     },
     buyer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     purchased: { type: Boolean, default: false },

@@ -32,81 +32,41 @@ function DetailsPage({user}){
         set([...watch,item]);
         editBadge(watch.length + 1);
     }
-
-    function handlePurchase(){
-        console.log("Send to stipe API");
-        console.log("Item name:", item.title);
-        console.log("Item cost:", item.price);
-
-        try {
-            fetch('http://localhost:5004/api/checkout-session', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(
-                    {
-                        title: item.title,
-                        description: item.description,
-                        price: item.price,
-                        seller: item.seller,
-                        category: item.category,
-                        condition: item.condition,
-                        delivery: item.delivery
-                    }
-                )
-            }).then(res => {
-        
-                if (res.ok) {
-                    return res.json();
-                } else {
-                    return res.json().then(json => Promise.reject(json))
-                }
-        
-            }).then(({ url }) => {
-        
-                window.location = url;
-        
-            }).catch(e => {
-        
-                console.log(e.error);
-        
-            });
-
-        } catch (error) {
-            console.log("Payment request failed:", error);
-        }
-
-        // const requestLogin = async () => {
-        //     try {
-        //       const response = await fetch("http://localhost:5002/api/users/login", {
-        //         method: "POST",
-        //         headers: {
-        //           "Content-Type": "application/json",
-        
-        //         },
-        //         body: JSON.stringify({ email, password }),
-        //       });
-        
-        //       if (!response.ok) {
-        //         const errorData = await response.json();
-        //         console.error("Login failed:", errorData.message);
-        //         return;
-        //       }
-        
-        //       const json = await response.json();
-        //       console.log("Response:", json);
-              
-        //       // Save the token to localStorage so you can use it for authenticated requests
-        //       localStorage.setItem("jwtToken", json.token);
-        
-        //       // Navigate to the account page upon successful login
-        //       requestProfile(json.token)
-        //     } catch (error) {
-        //       console.error("Request failed:", error);
-        //     }
-        //   };
-
+    
+    function handlePurchase() {
+      console.log("Send to stripe API");
+      console.log("Item name:", item.title);
+      console.log("Item cost:", item.price);
+      console.log("Seller object:", item.seller);
+    
+      try {
+        fetch("http://localhost:5004/api/checkout-session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: item.title,
+            price: item.price,
+            itemId: item._id,
+            sellerAccount: item.seller.stripeAccountId  // should be a valid Stripe account ID
+          }),
+        })
+          .then((res) => {
+            if (!res.ok) {
+              return res.json().then(json => Promise.reject(json));
+            }
+            return res.json();
+          })
+          .then(({ url }) => {
+            window.location = url;
+          })
+          .catch((e) => {
+            console.error(e.error);
+          });
+      } catch (error) {
+        console.error("Payment request failed:", error);
+      }
     }
 
     function stringToHslColor(string, saturation, boldness) {

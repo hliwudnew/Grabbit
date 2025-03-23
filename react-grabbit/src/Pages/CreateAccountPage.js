@@ -1,5 +1,6 @@
+// src/Pages/CreateAccountPage.js
 import "../Styles/CreateAccountPage.css";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -7,40 +8,36 @@ function CreateAccountPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState("");
+  const [username, setUsername] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const requestCreate = async () => {
+  async function requestCreate() {
     try {
       const response = await fetch("http://localhost:5002/api/users/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // "Accept": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: user,
-          email: email,
-          password: password,
+          username,
+          email,
+          password,
         }),
       });
 
       const json = await response.json();
-      console.log("Response:", json);
-
-      if (response.ok) {
-        // Registration was successful
-        // Optionally store the token from json.token, e.g.:
-        // localStorage.setItem("jwtToken", json.token);
-        navigate("/login");
-      } else {
-        // Handle errors from the server (e.g., validation errors)
+      if (!response.ok) {
+        setErrorMsg(json.message || "Error creating account");
         console.error("Error creating account:", json);
+        return;
       }
+      console.log("Response:", json);
+      // After successful registration, redirect to the onboarding page.
+      // Pass the user object (which includes stripeAccountId) via state or store it globally.
+      navigate("/onboarding", { state: { user: json } });
     } catch (error) {
       console.error("Request failed:", error);
-      // Optionally display an error message on the UI
+      setErrorMsg("Request failed. Please try again.");
     }
-  };
+  }
 
   return (
     <div className="CreateAccountPage-content">
@@ -62,19 +59,20 @@ function CreateAccountPage() {
             variant="outlined"
             sx={{ input: { color: "#685BE0" } }}
             className="account-input"
-            value={user}
-            onChange={(e) => setUser(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             label="Password"
-            variant="outlined"
             type="password"
+            variant="outlined"
             sx={{ input: { color: "#685BE0" } }}
             className="account-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+        {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
         <div style={{ textAlign: "center" }}>
           <Button
             onClick={requestCreate}
