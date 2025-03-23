@@ -2,43 +2,31 @@
 import "../Styles/CreateAccountPage.css";
 import { Button, TextField, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
 
-function CreateAccountPage({callBack,setWatch,setWatchIcon}) {
+const CreateAccountPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const requestCreate = async () => {
     try {
       const response = await fetch("http://localhost:5002/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username,
-          email,
-          password,
-        }),
+        body: JSON.stringify({ username, email, password }),
       });
 
       const json = await response.json();
-      console.log("Response:", json);
-
-      if (response.ok) {
-        // Registration was successful
-        // Optionally store the token from json.token, e.g.:
-        // localStorage.setItem("jwtToken", json.token);
-        navigate("/login");
-      } else {
-        // Handle errors from the server (e.g., validation errors)
+      if (!response.ok) {
+        setErrorMsg(json.message || "Error creating account");
         console.error("Error creating account:", json);
         return;
       }
       console.log("Response:", json);
-      // After successful registration, redirect to the onboarding page.
-      // Pass the user object (which includes stripeAccountId) via state or store it globally.
-      navigate("/onboarding", { state: { user: json } });
+      navigate("/account");
     } catch (error) {
       console.error("Request failed:", error);
       setErrorMsg("Request failed. Please try again.");
@@ -91,6 +79,6 @@ function CreateAccountPage({callBack,setWatch,setWatchIcon}) {
       </div>
     </div>
   );
-}
+};
 
 export default CreateAccountPage;

@@ -1,19 +1,16 @@
 const Watchlist = require('../models/watchlist');
 
 exports.getWatchList = async (req, res) => {
-    try{
-        const watchlist = await Watchlist.findOne({userID:req.user._id})
-
-        if(!watchlist){
-            res.status(404).json({message:"Users Watchlist Not Found"})
-        }
-
-        res.status(200).json(watchlist);
+    try {
+      const watchlist = await SomeModel.find({ userId: req.user._id });
+      if (!watchlist) {
+        return res.status(404).json({ message: "No watchlist found" });
+      }
+      return res.json(watchlist);
+    } catch (error) {
+      return res.status(500).json({ message: 'Server error', error: error.message });
     }
-    catch(error){
-        res.status(500).json({message:error.message})
-    }
-};
+  };
 
 exports.addToWatchList = async (req, res) => {
     try{

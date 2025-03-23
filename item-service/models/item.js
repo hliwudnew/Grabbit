@@ -6,7 +6,6 @@ const itemSchema = new mongoose.Schema(
     title: { type: String, required: true },
     description: { type: String },
     price: { type: Number, required: true },
-    // Instead of referencing User, store an object with seller details:
     seller: {
       _id: { type: mongoose.Schema.Types.ObjectId, required: true },
       username: { type: String, required: true },
