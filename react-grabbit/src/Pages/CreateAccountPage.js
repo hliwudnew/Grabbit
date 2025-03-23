@@ -4,14 +4,13 @@ import { Button, TextField, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-function CreateAccountPage() {
+function CreateAccountPage({callBack,setWatch,setWatchIcon}) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [user, setUser] = useState("");
 
-  async function requestCreate() {
+  const requestCreate = async () => {
     try {
       const response = await fetch("http://localhost:5002/api/users/register", {
         method: "POST",
@@ -24,8 +23,15 @@ function CreateAccountPage() {
       });
 
       const json = await response.json();
-      if (!response.ok) {
-        setErrorMsg(json.message || "Error creating account");
+      console.log("Response:", json);
+
+      if (response.ok) {
+        // Registration was successful
+        // Optionally store the token from json.token, e.g.:
+        // localStorage.setItem("jwtToken", json.token);
+        navigate("/login");
+      } else {
+        // Handle errors from the server (e.g., validation errors)
         console.error("Error creating account:", json);
         return;
       }
@@ -37,7 +43,7 @@ function CreateAccountPage() {
       console.error("Request failed:", error);
       setErrorMsg("Request failed. Please try again.");
     }
-  }
+  };
 
   return (
     <div className="CreateAccountPage-content">

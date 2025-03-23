@@ -64,6 +64,20 @@ exports.getItemById = async (req, res) => {
   }
 };
 
+// Get details for a multiple items
+exports.getMultipleItemsById = async (req, res) => {
+  try {
+    const items = await Item.find({ _id: { $in: req.body.itemIDs } });
+
+    if (!items){
+      return res.status(404).json({ message: 'Items not found' });
+    }
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 // Purchase an item
 exports.purchaseItem = async (req, res) => {
   try {

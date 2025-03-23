@@ -3,17 +3,20 @@ import "../Styles/DetailsPage.css"
 import {useNavigate } from "react-router-dom";
 import Alert from '@mui/material/Alert';
 import CheckIcon from '@mui/icons-material/Check';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
 import { useContext } from "react";
 import { EditWatchlist, Watchlist, EditWatchBadge } from "../App.js";
+import ContactSeller from "../Modals/ContactSeller.js";
 function DetailsPage({user}){
     //Hook state, for naviation
     const navigate = useNavigate();
     const watch = useContext(Watchlist);
     const set = useContext(EditWatchlist);
     const editBadge = useContext(EditWatchBadge);
+
+    const [open,setOpen] = useState(false);
 
     //Used to grab the data sent from the listings page, to its specific details
     const { state } = useLocation();
@@ -28,45 +31,113 @@ function DetailsPage({user}){
 
 
     function handleAdded(){
+        requestAddToWatchlist();
         setAdded(true);
         set([...watch,item]);
         editBadge(watch.length + 1);
     }
-    
-    function handlePurchase() {
-      console.log("Send to stripe API");
-      console.log("Item name:", item.title);
-      console.log("Item cost:", item.price);
-      console.log("Seller object:", item.seller);
-    
-      try {
-        fetch("http://localhost:5004/api/checkout-session", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: item.title,
-            price: item.price,
-            itemId: item._id,
-            sellerAccount: item.seller.stripeAccountId  // should be a valid Stripe account ID
-          }),
-        })
-          .then((res) => {
-            if (!res.ok) {
-              return res.json().then(json => Promise.reject(json));
+
+    function handlePurchase(){
+        console.log("Send to stipe API");
+        console.log("Item name:", item.title);
+        console.log("Item cost:", item.price);
+
+        try {
+            fetch('http://localhost:5004/api/checkout-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        title: item.title,
+                        description: item.description,
+                        price: item.price,
+                        seller: item.seller,
+                        category: item.category,
+                        condition: item.condition,
+                        delivery: item.delivery
+                    }
+                )
+            }).then(res => {
+        
+                if (res.ok) {
+                    return res.json();
+                } else {
+                    return res.json().then(json => Promise.reject(json))
+                }
+        
+            }).then(({ url }) => {
+        
+                window.location = url;
+        
+            }).catch(e => {
+        
+                console.log(e.error);
+        
+            });
+
+        } catch (error) {
+            console.log("Payment request failed:", error);
+        }
+
+        // const requestLogin = async () => {
+        //     try {
+        //       const response = await fetch("http://localhost:5002/api/users/login", {
+        //         method: "POST",
+        //         headers: {
+        //           "Content-Type": "application/json",
+        
+        //         },
+        //         body: JSON.stringify({ email, password }),
+        //       });
+        
+        //       if (!response.ok) {
+        //         const errorData = await response.json();
+        //         console.error("Login failed:", errorData.message);
+        //         return;
+        //       }
+        
+        //       const json = await response.json();
+        //       console.log("Response:", json);
+              
+        //       // Save the token to localStorage so you can use it for authenticated requests
+        //       localStorage.setItem("jwtToken", json.token);
+        
+        //       // Navigate to the account page upon successful login
+        //       requestProfile(json.token)
+        //     } catch (error) {
+        //       console.error("Request failed:", error);
+        //     }
+        //   };
+
+    }
+
+    async function requestAddToWatchlist() {
+        try{
+            const token = localStorage.getItem("jwtToken");
+            const response = await fetch("http://localhost:5002/api/watchlists/add",{
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                  'Authorization': `Bearer ${token}`
+                },
+                body:JSON.stringify({
+                    itemID:item._id
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Add Vehicle Fetch failed:", errorData.message);
+                return;
             }
-            return res.json();
-          })
-          .then(({ url }) => {
-            window.location = url;
-          })
-          .catch((e) => {
-            console.error(e.error);
-          });
-      } catch (error) {
-        console.error("Payment request failed:", error);
-      }
+        
+            const json = await response.json();
+        }
+        catch(error){
+            console.error("Request failed:", error);
+        }
     }
 
     function stringToHslColor(string, saturation, boldness) {
@@ -74,7 +145,7 @@ function DetailsPage({user}){
         for (var i = 0; i < string.length; i++) {
         hash = string.charCodeAt(i) + ((hash << 5) - hash);
         }
-    
+
         hash = hash % 360;
         return 'hsl('+hash+', '+saturation+'%, '+boldness+'%)';
     }
@@ -103,17 +174,29 @@ function DetailsPage({user}){
                     <p>Shipping: $5 international or Free local</p>
                     {
                         user ?
-                        <>
-                            <Button onClick={handlePurchase} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Purchase</Button>
-                            {
-                                added ? 
-                                <Alert style={{marginBottom:"5%"}} icon={<CheckIcon fontSize="inherit" />} severity="success">Added to Your Watchlist</Alert> 
-                                : 
-                                <div style={{display:"flex", flexDirection:"column"}}>
-                                    <Button onClick={handleAdded} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Add to Watchlist</Button>
-                                </div>
-                            }
-                        </>
+                            !(user._id === item.seller._id)?
+                            <>
+                                {
+                                    !(item.delivery === "in-person")?
+                                    <Button onClick={handlePurchase} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Purchase</Button>
+                                    :
+                                    <>
+                                    <ContactSeller receiverID={item.seller._id} senderName={user.username} receiverName={item.seller.username}  open={open} close={() => setOpen(false)}/>
+                                    <Button onClick={() => setOpen(true)} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Contact Seller</Button>
+                                    </>
+                                }
+                                {
+                                    added ? 
+                                    <Alert style={{marginBottom:"5%"}} icon={<CheckIcon fontSize="inherit" />} severity="success">Added to Your Watchlist</Alert> 
+                                    : 
+                                    <div style={{display:"flex", flexDirection:"column"}}>
+                                        <Button onClick={handleAdded} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Add to Watchlist</Button>
+                                    </div>
+                                }
+                            </>
+                            :
+                            //Add the remove your own listing here
+                            <p>This is your own listing! Hope someone buys it!</p>
                         :
                         <Button onClick={() => navigate("/login")} style={{backgroundColor:"#685BE0", color:"white"}}>Login to Purchase</Button>
                     }

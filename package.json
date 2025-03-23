@@ -2,16 +2,11 @@
     "name": "grabbit",
     "version": "1.0.0",
     "private": true,
-    "scripts": {
-        "start": "concurrently \"cd user-service && npx nodemon server.js\" \"cd item-service && npx nodemon server.js\" \"cd payment-service && npx nodemon server.js\" \"cd react-grabbit && npm start\""
-    },
+"scripts": {
+  "start": "concurrently \"cd user-service && npx nodemon server.js\" \"cd item-service && npx nodemon server.js\" \"cd react-grabbit && npm start\""
+},
     "devDependencies": {
-        "concurrently": "^7.0.0",
-        "nodemon": "^2.0.0"
-    },
-    "dependencies": {
-        "@stripe/react-stripe-js": "^3.5.1",
-        "@stripe/stripe-js": "^6.1.0",
-        "stripe": "^17.7.0"
+      "concurrently": "^7.0.0",
+      "nodemon": "^2.0.0"
     }
 }

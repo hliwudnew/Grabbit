@@ -2,30 +2,12 @@ import "../Styles/CartPage.css"
 import CartTile from "../Components/CartTile";
 import { Button } from "@mui/material";
 import {useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Watchlist } from "../App.js";
-function CartPage(){
+function CartPage({user}){
     //Hook state, for naviation
     const navigate = useNavigate();
-    const cart = useContext(Watchlist);
-
-
-    var subtotal = 0;
-    var total = 0;
-    var shipping = 0;
-    var tax = 0;
-
-    function calculate(){
-        for(let i = 0; i <cart.length; i++){
-            console.log(cart[i].price);
-            subtotal = subtotal + parseFloat(cart[i].price);
-            //Not a real value currently, this is just one I made up
-            shipping = shipping + 5;// $5 per item
-        }
-        tax = subtotal*1.13;
-        total = tax + shipping;
-        total = Math.round(total*100)/100;
-    }
+    const watchlist = useContext(Watchlist);
 
     return(
         <div className="CartPage-content">
@@ -37,10 +19,10 @@ function CartPage(){
                     </div>
                     <div className="CartPage-Items">
                         {
-                            cart[0] !== undefined ?
-                            cart.map((item)=>{
+                            watchlist ?
+                            watchlist.map((item)=>{
                                 return(
-                                    <CartTile data={item}/>
+                                    <CartTile user={user} data={item}/>
                                 )
                             })
                             :
