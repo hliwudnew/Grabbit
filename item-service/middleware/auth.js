@@ -7,8 +7,8 @@ exports.protect = (req, res, next) => {
     try {
       token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      // Set both _id and username from the decoded token
-      req.user = { _id: decoded.id, username: decoded.username };
+      // Now req.user will have id, username, and stripeAccountId
+      req.user = decoded;
       next();
     } catch (error) {
       return res.status(401).json({ message: 'Not authorized, token failed' });
@@ -17,4 +17,3 @@ exports.protect = (req, res, next) => {
     return res.status(401).json({ message: 'Not authorized, no token' });
   }
 };
-

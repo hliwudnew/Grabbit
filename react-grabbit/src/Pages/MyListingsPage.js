@@ -1,29 +1,28 @@
+// src/Pages/MyListingsPage.js
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "../Styles/ListingsPage.css";
-import ListingTile from "../Components/ListingTile.js";
+import ListingTile from "../Components/ListingTile";
 import SortingSelect from "../Components/SortingSelect.js";
 
 function MyListingsPage() {
   const [items, setItems] = useState([]);
   const location = useLocation();
 
-  // Retrieve user info from localStorage (if available)
+  // Retrieve user info from localStorage
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
 
-  // Extract query parameters "q" and "category" from the URL (if filtering is desired)
+  // Extract query parameters for filtering (if needed)
   const queryParams = new URLSearchParams(location.search);
   const searchQuery = queryParams.get("q") || "";
   const categoryQuery = queryParams.get("category") || "";
 
   useEffect(() => {
-    if (!user) return; // Optionally, you might redirect to login if user is not available
+    if (!user) return; // Optionally redirect if user is not logged in
 
-    // Base URL for current user's listings
+    // Base URL for seller's items (active items only)
     let baseUrl = "http://localhost:5003/api/items/seller/myitems";
-
-    // If search or category filters are provided, append them
     let url = baseUrl;
     if (searchQuery || categoryQuery) {
       let queryString = "";
@@ -36,7 +35,6 @@ function MyListingsPage() {
       url = `${baseUrl}?${queryString}`;
     }
 
-    // Set up headers to include the JWT token
     const headers = {
       Authorization: "Bearer " + localStorage.getItem("jwtToken"),
     };
@@ -49,6 +47,7 @@ function MyListingsPage() {
         return response.json();
       })
       .then((data) => {
+        // Since the server now returns only active items, just set them
         setItems(data);
       })
       .catch((error) => {
@@ -64,7 +63,7 @@ function MyListingsPage() {
       <div className="ListingsPage-bottom">
         <div className="ListingsPage-filters">
           <h2>Filters</h2>
-          {/* Additional filter UI can be added here if desired */}
+          {/* Additional filter UI elements if needed */}
         </div>
         <div className="ListingsPage-tiles">
           {items.map((item) => (

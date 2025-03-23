@@ -33,13 +33,12 @@ function PostPage() {
   };
 
   const handlePost = async () => {
-    // Check if an image is selected before submission
     if (!imageFile) {
       setErrorMsg("Image is required.");
       return;
     }
 
-    // Create FormData to support file upload
+    // Build FormData for file upload and other fields
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
@@ -52,14 +51,15 @@ function PostPage() {
     try {
       const response = await fetch("http://localhost:5003/api/items", {
         method: "POST",
-        // Do not set Content-Type when sending FormData
+        // Do NOT set Content-Type header when using FormData.
         headers: {
           "Authorization": "Bearer " + localStorage.getItem("jwtToken")
         },
         body: formData,
       });
+      
       const json = await response.json();
-      console.log("Response:", json);
+      
       if (response.ok) {
         setPostSuccess(true);
       } else {
