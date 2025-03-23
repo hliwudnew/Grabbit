@@ -156,6 +156,10 @@ function DetailsPage({user}){
         }
     }
 
+    async function handleRemoveLisiting() {
+        console.log("Remove from database");
+    }
+
     function stringToHslColor(string, saturation, boldness) {
         var hash = 0;
         for (var i = 0; i < string.length; i++) {
@@ -187,7 +191,12 @@ function DetailsPage({user}){
                     <Avatar style={{backgroundColor: stringToHslColor(item.seller ? item.seller.username :"Adam Sandler" ,40,60)}}>{item.seller ? item.seller.username.substring(0,1) : "A"}</Avatar>
                     <p>Sold by {item.seller ? item.seller.username : "Adam Sandler" }</p>
                     <h2>${item.price}</h2>
-                    <p>Shipping: $5 international or Free local</p>
+                    {
+                        item.delivery === "online"?
+                            <p>Shipping: Determined at checkout</p>
+                        :
+                        <p>Shipping: Local Pickup/Determined by Seller</p>
+                    }
                     {
                         user ?
                             !(user._id === item.seller._id)?
@@ -212,7 +221,7 @@ function DetailsPage({user}){
                             </>
                             :
                             //Add the remove your own listing here
-                            <p>This is your own listing! Hope someone buys it!</p>
+                            <Button onClick={handleRemoveLisiting} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Remove Listing</Button>
                         :
                         <Button onClick={() => navigate("/login")} style={{backgroundColor:"#685BE0", color:"white"}}>Login to Purchase</Button>
                     }

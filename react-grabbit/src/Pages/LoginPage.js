@@ -25,7 +25,7 @@ function LoginPage({callBack,setWatch,setWatchIcon}) {
       }
 
       const json = await response.json();
-      console.log("Response:", json);
+      //console.log("Response:", json);
       
       // Save the token to localStorage
       localStorage.setItem("jwtToken", json.token);
@@ -109,7 +109,7 @@ function LoginPage({callBack,setWatch,setWatchIcon}) {
       }
 
       const json = await response.json();
-      console.log("WatchList:", json);
+      //console.log("WatchList:", json);
       setWatch(json);
       setWatchIcon(json.length);
     }
