@@ -126,7 +126,7 @@ function App() {
           <Route path="/" element={<HomePage/>} />
           <Route path="/cart" element={<CartPage user={user}/>}/>
           <Route path="/checkout" element={<CheckoutPage/>}/>
-          <Route path="/account" element={<AccountPage callBack={setUser}/>}/>
+          <Route path="/account" element={<AccountPage user={user} callBack={setUser}/>}/>
           <Route path ="/listings" element={<ListingsPage/>}/>
           <Route path ="/login" element={<LoginPage callBack={setUser} setWatch={setWatch} setWatchIcon={setWatchIcon}/>}/>
           <Route path="/my-listings" element={<MyListingsPage/>}/> {/* New route */}
