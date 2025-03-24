@@ -1,65 +1,58 @@
 // src/Pages/SuccessPage.js
-import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Button } from '@mui/material';
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 function SuccessPage() {
   const { search } = useLocation();
   const navigate = useNavigate();
-  const [message, setMessage] = useState('Processing your purchase...');
-  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("Processing your purchase...");
 
   useEffect(() => {
+    // Parse query parameters
     const query = new URLSearchParams(search);
-    const sessionId = query.get('session_id');
-    const itemId = query.get('itemId');
+    const sessionId = query.get("session_id");
+    const itemId = query.get("itemId");
 
-    if (!itemId) {
-      setMessage('No item specified.');
-      setLoading(false);
+    if (!sessionId || !itemId) {
+      setMessage("Missing session or item information.");
       return;
     }
 
-    // Call the purchase endpoint on your item service
-    // This endpoint should mark the item as purchased using the buyer's token.
+    // Optionally, you can verify the session with your payment service here.
+    // For now, we assume that reaching the success page means payment succeeded.
+
+    // Mark the item as purchased by calling your item service endpoint
     fetch(`http://localhost:5003/api/items/${itemId}/purchase`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        // Make sure the user is logged in so that jwtToken is in localStorage.
+        "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("jwtToken"),
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Failed to mark item as purchased.');
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((data) => {
+            throw new Error(data.message || "Failed to mark item as purchased.");
+          });
         }
-        return res.json();
+        return response.json();
       })
       .then((data) => {
-        setMessage('Purchase successful! Your item has been marked as purchased.');
-        setLoading(false);
+        setMessage("Purchase successful! Your item has been marked as purchased.");
       })
       .catch((error) => {
         console.error("Error marking purchase:", error);
-        setMessage('Error marking purchase: ' + error.message);
-        setLoading(false);
+        setMessage("Error marking purchase: " + error.message);
       });
   }, [search]);
 
   return (
-    <div style={{ padding: '2rem', textAlign: 'center' }}>
+    <div style={{ padding: "2rem", textAlign: "center" }}>
       <h1>{message}</h1>
-      {!loading && (
-        <Button 
-          variant="contained" 
-          color="primary" 
-          onClick={() => navigate('/')}
-          style={{ marginTop: '1rem' }}
-        >
-          Back to Home
-        </Button>
-      )}
+      <Button variant="contained" onClick={() => navigate("/")}>
+        Back to Home
+      </Button>
     </div>
   );
 }
