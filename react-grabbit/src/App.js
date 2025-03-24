@@ -18,6 +18,8 @@ import MessagesPage from './Pages/MessagesPage.js';
 import DetailsPage from './Pages/DetailsPage.js';
 import PostPage from './Pages/PostPage.js';
 import StripeOnboarding from "./Components/StripeOnboarding";
+import SuccessPage from './Pages/SuccessPage';
+
 
 export const Watchlist = createContext();
 export const EditWatchlist = createContext();
@@ -134,6 +136,7 @@ function App() {
           <Route path = "/details" element={<DetailsPage user={user}/>}/>
           <Route path ="/create" element={<PostPage/>}/>
           <Route path="/onboarding" element={<StripeOnboarding />} />
+          <Route path="/success" element={<SuccessPage />} />
           <Route path="/*" element={<ErrorPage/>}/>
       </Routes>
       </EditWatchBadge.Provider>
