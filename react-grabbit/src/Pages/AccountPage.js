@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import * as React from 'react';
 import AccountTabs from "../Components/AccountTabs.js";
 import {useNavigate} from "react-router-dom";
-function AccountPage({callBack}){
+function AccountPage({user,callBack}){
     const navigate = useNavigate();
 
 
@@ -20,7 +20,7 @@ function AccountPage({callBack}){
                 <div style={{display:"flex", justifyContent:"end", paddingRight:"5%", paddingTop:"1%"}}>
                     <Button onClick={handleLogout} style={{backgroundColor:"#685BE0"}} variant="contained">Sign Out</Button>
                 </div>
-                <AccountTabs/>
+                <AccountTabs user={user}/>
             </div>
         </div>
     );

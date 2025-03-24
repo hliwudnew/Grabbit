@@ -16,13 +16,14 @@
 }
 
 .ListingsPage-tiles{
-    display: grid;
+    /* display: grid;
     grid-template-columns: auto auto auto auto;
-    /* column-gap: 5%;
-    row-gap: 5%; */
     grid-gap: 5%;
     height: 100%;
-    flex-grow: 1;
+    flex-grow: 1; */
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
 .ListingsPage-filters{
