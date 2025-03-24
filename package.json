@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
 "scripts": {
-  "start": "concurrently \"cd user-service && npx nodemon server.js\" \"cd item-service && npx nodemon server.js\" \"cd react-grabbit && npm start\""
+  "start": "concurrently \"cd user-service && npx nodemon server.js\" \"cd item-service && npx nodemon server.js\" \"cd payment-service && npx nodemon server.js\" \"cd react-grabbit && npm start\""
 },
     "devDependencies": {
       "concurrently": "^7.0.0",
