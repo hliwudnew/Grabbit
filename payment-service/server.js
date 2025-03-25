@@ -55,7 +55,6 @@ app.post('/api/checkout-session', async (req, res) => {
       console.log("Either seller account equals platform account or not fully onboarded; no transfer_data will be added.");
     }
 
- master
     const session = await stripe.checkout.sessions.create(sessionParams);
     res.json({ url: session.url });
   } catch (error) {
