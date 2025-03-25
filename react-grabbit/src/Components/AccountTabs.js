@@ -1,7 +1,8 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { func } from 'prop-types';
 import { Tabs,Tab, Button, TextField } from "@mui/material";
 import Box from '@mui/material/Box';
+import { useEffect, useState, useRef } from 'react';
 import "../Styles/AccountTabs.css";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -32,12 +33,57 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs() {
+export default function BasicTabs({user}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  function handlePasswordChanges(){
+    if(newPassword === newPassword2){
+      const token = localStorage.getItem("jwtToken");
+      requestPasswordChange(token)
+      setCurPassword("");
+      setNewPassword("");
+      setNewPassword2("");
+    }
+    else{
+      console.log("New Passwords do not match!");
+    }
+  }
+
+  async function requestPasswordChange(token){
+    try{
+      const response = await fetch("http://localhost:5002/api/users/change-password", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+        body:JSON.stringify({
+          oldPassword: curPassword,
+          newPassword: newPassword
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("New Password Fetch failed:", errorData.message);
+        return;
+      }
+
+      const json = await response.json();
+      console.log("Password Changed:", json);
+    }
+    catch(error){
+      console.error("Request failed:", error);
+    }
+  }
+
+  const [curPassword,setCurPassword] = useState();
+  const [newPassword,setNewPassword] = useState();
+  const [newPassword2,setNewPassword2] = useState();
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -45,33 +91,29 @@ export default function BasicTabs() {
         <Tabs TabIndicatorProps={{sx:{backgroundColor:"#685BE0",height:2}}} value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab  style={{color:"#685BE0"}} label="Account Info" {...a11yProps(0)} />
           <Tab style={{color:"#685BE0"}} label="Shipping Info" {...a11yProps(1)} />
-          <Tab style={{color:"#685BE0"}} label="Payment Info" {...a11yProps(2)} />
+          {/* <Tab style={{color:"#685BE0"}} label="Payment Info" {...a11yProps(2)} /> */}
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
         <div className='AccountInfo-container'>
             <div className='AccountInfo-inputs'>
               <div>
-                <h3>First Name</h3>
-                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' style={{width:"100%"}}/>
-              </div>
-              <div>
-                <h3>Last Name</h3>
-                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' style={{width:"100%"}}/>
+                <h3>Username</h3>
+                <TextField value={user? user.username :""} disabled={true} sx={{ input: { color: '#685BE0' } }} className='account-input' style={{width:"100%"}}/>
               </div>
               <div>
                 <h3>Email Address</h3>
-                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' style={{width:"100%"}}/>
+                <TextField value={user? user.email :""} disabled={true} sx={{ input: { color: '#685BE0' } }} className='account-input' style={{width:"100%"}}/>
               </div>
             </div>
             <div className='AccountInfo-password'>
                 <h3>Password Changes</h3>
-                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' label="Current Password"/>
-                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' label ="New Password"/>
-                <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' label ="Confirm New Password"/>
+                <TextField type="password" value={curPassword} onChange={(e) => (setCurPassword(e.target.value))} sx={{ input: { color: '#685BE0' } }} className='account-input' label="Current Password"/>
+                <TextField type="password" value={newPassword} onChange={(e) => (setNewPassword(e.target.value))} sx={{ input: { color: '#685BE0' } }} className='account-input' label ="New Password"/>
+                <TextField type="password" value={newPassword2} onChange={(e) => (setNewPassword2(e.target.value))} sx={{ input: { color: '#685BE0' } }} className='account-input' label ="Confirm New Password"/>
             </div>
         </div>
-        <Button style={{backgroundColor:"#685BE0"}} variant='contained'>Save Changes</Button>
+        <Button onClick={handlePasswordChanges} style={{backgroundColor:"#685BE0",marginTop:"1%"}} variant='contained'>Save Changes</Button>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <div className='ShippingInfo-container'>
@@ -97,7 +139,7 @@ export default function BasicTabs() {
                 <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' style={{width:"100%"}}/>
               </div>
             </div>
-            <Button style={{backgroundColor:"#685BE0"}} variant='contained'>Save Changes</Button>
+            <Button style={{backgroundColor:"#685BE0",marginTop:"1%"}} variant='contained'>Save Changes</Button>
         </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
@@ -108,7 +150,7 @@ export default function BasicTabs() {
                 <h3>Creditcard</h3>
                 <TextField sx={{ input: { color: '#685BE0' } }} className='account-input' defaultValue="1234 **** **** ****"/>
             </div>
-            <Button style={{backgroundColor:"#685BE0"}} variant='contained'>Save Changes</Button>
+            <Button style={{backgroundColor:"#685BE0",marginTop:"1%"}} variant='contained'>Save Changes</Button>
         </div>
       </CustomTabPanel>
     </Box>

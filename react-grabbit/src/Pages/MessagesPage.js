@@ -91,6 +91,10 @@ function MessagesPage({user}){
 
 
     async function sendMessage(){
+        if(text.length < 1){
+            console.log("empty message, no request made")
+            return;
+        }
         try {
             var receiverName = "";
             //Looks through the contacts and grabs associated id

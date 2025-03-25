@@ -126,7 +126,7 @@ function App() {
           <Route path="/" element={<HomePage/>} />
           <Route path="/cart" element={<CartPage/>}/>
           <Route path="/checkout" element={<CheckoutPage/>}/>
-          <Route path="/account" element={<AccountPage callBack={setUser}/>}/>
+          <Route path="/account" element={<AccountPage user={user} callBack={setUser}/>}/>
           <Route path ="/listings" element={<ListingsPage/>}/>
           <Route path ="/login" element={<LoginPage callBack={setUser}/>}/>
           <Route path="/my-listings" element={<MyListingsPage/>}/> {/* New route */}
@@ -137,6 +137,7 @@ function App() {
           <Route path ="/create" element={<PostPage/>}/>
           <Route path="/success" element={<SuccessPage />} />
           <Route path="/onboarding" element={<StripeOnboarding />} />
+          <Route path="/success" element={<SuccessPage />} />
           <Route path="/*" element={<ErrorPage/>}/>
       </Routes>
       </EditWatchBadge.Provider>
