@@ -1,55 +1,64 @@
-// controllers/messageController.js
 const Message = require('../models/message');
-const mongoose = require('mongoose'); // Needed to convert the req.user._id to an ID type 
+const mongoose = require('mongoose');
 
-// Send a message
 exports.sendMessage = async (req, res) => {
   try {
-    const { receiver, content,senderName, receiverName } = req.body;
-    // sender is taken from req.user (set by the auth middleware)
-    const sender = req.user._id;
-    if (!receiver || !content ||!senderName || !receiverName) {
-      return res.status(400).json({ message: 'Receiver and content are required.' });
+    console.log("sendMessage - req.body:", req.body);
+    console.log("sendMessage - req.user:", req.user);
+
+    const { receiver, content, receiverName } = req.body;
+
+    if (!receiver || !content || !receiverName) {
+      return res.status(400).json({ message: 'Receiver, content, and receiverName are required.' });
     }
-    const message = await Message.create({sender, receiver, content,senderName, receiverName});
+
+    // Use req.user.id instead of req.user._id
+    const sender = req.user.id;
+    const senderName = req.user.username || "Unknown Sender";
+
+    const message = await Message.create({ sender, receiver, content, senderName, receiverName });
     res.status(201).json(message);
   } catch (error) {
+    console.error("Error in sendMessage:", error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
-// Get conversation between the authenticated user and another user
+
+
 exports.getConversation = async (req, res) => {
   try {
-    // The other user's ID is passed as a URL parameter
     const { userId } = req.params;
-    const currentUserId = req.user._id.toString();
+    const currentUserId = req.user.id.toString();
 
-    // Find messages where current user is either sender or receiver with the other user
+    // Find messages exchanged between the two users
     const messages = await Message.find({
       $or: [
         { sender: currentUserId, receiver: userId },
         { sender: userId, receiver: currentUserId }
       ]
-    }).sort({ createdAt: 1 }); // sort in ascending order by time
+    }).sort({ createdAt: 1 });
 
+    // Instead of wrapping in an object, return the messages array directly.
     res.json(messages);
   } catch (error) {
+    console.error("Error in getConversation:", error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
-// Gets contacts based on who has messaged you, should help when the buyer sends the first message to the seller.
-// First message should be in the sellers messages, but the Buyer wont have their conacts until messaged back since they wouldnt have recieved a message yet
+
 exports.getContacts = async (req, res) => {
   try {
+    // Use req.user.id and ensure mongoose is imported for ObjectId conversion
     const contacts = await Message.aggregate([
-      { $match: { receiver: new mongoose.Types.ObjectId(req.user._id)}},
-      { $group: {"_id": "$sender",senderName:{$first: "$senderName"}}},
-      { $project: {_id: 0, sender: "$_id",senderName:1}}
+      { $match: { receiver: new mongoose.Types.ObjectId(req.user.id) } },
+      { $group: { _id: "$sender", senderName: { $first: "$senderName" } } },
+      { $project: { _id: 0, sender: "$_id", senderName: 1 } }
     ]);
 
     res.json(contacts);
   } catch (error) {
+    console.error("Error in getContacts:", error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
