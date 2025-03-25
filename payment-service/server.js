@@ -15,6 +15,27 @@ app.use(cors());
 
 // --- Your existing endpoints ---
 
+// Onboarding link endpoint
+app.post("/api/account-link", async (req, res) => {
+  try {
+    const { account } = req.body;
+    if (!account) {
+      return res.status(400).json({ error: "Account ID is required" });
+    }
+    const accountLink = await stripe.accountLinks.create({
+      account: account,
+      return_url: `${process.env.CLIENT_URL}/index.html`, // Ensure this starts with http:// or https://
+      refresh_url: `${process.env.CLIENT_URL}/index.html`,
+      type: "account_onboarding",
+    });
+    res.json(accountLink);
+  } catch (error) {
+    console.error("Error creating account link:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 // In payment-service/server.js (Stripe Checkout endpoint)
 app.post('/api/checkout-session', async (req, res) => {
   try {
