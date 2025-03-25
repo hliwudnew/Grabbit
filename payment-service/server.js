@@ -71,7 +71,7 @@ app.post('/api/payment-dashboard', async (req, res) => {
   }
 });
 
-// Stripe Checkout Session endpoint
+// In payment-service/server.js (Stripe Checkout endpoint)
 app.post('/api/checkout-session', async (req, res) => {
   try {
     const { title, price, itemId, sellerAccount } = req.body;
@@ -79,10 +79,6 @@ app.post('/api/checkout-session', async (req, res) => {
       throw new Error("sellerAccount is missing from request");
     }
     
-    console.log("Checkout-session request:");
-    console.log("  Seller Account:", sellerAccount);
-    console.log("  Platform Account:", process.env.PLATFORM_STRIPE_ACCOUNT);
-
     // Build session parameters
     const sessionParams = {
       line_items: [
@@ -98,29 +94,12 @@ app.post('/api/checkout-session', async (req, res) => {
       mode: 'payment',
       success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}&itemId=${itemId}`,
       cancel_url: `${process.env.CLIENT_URL}/cancel.html`,
-      metadata: {
-        itemId: itemId, // so we know which item was purchased in the webhook
-      },
+      metadata: { itemId: itemId },
     };
 
-    // Retrieve the connected account details to check if it's fully onboarded.
-    const connectedAccount = await stripe.accounts.retrieve(sellerAccount);
-    console.log("Connected account details:", connectedAccount);
+    // Optionally add transfer_data if applicable…
+    // (Your current logic here)
 
-    // If the seller’s account is not the same as your platform and is fully onboarded, add transfer data.
-    if (sellerAccount !== process.env.PLATFORM_STRIPE_ACCOUNT && connectedAccount.details_submitted) {
-      sessionParams.payment_intent_data = {
-        application_fee_amount: Math.round(Number(price) * 0.10 * 100), // 10% fee (in cents)
-        transfer_data: {
-          destination: sellerAccount,
-        },
-      };
-    } else {
-      console.log("Either seller account equals platform account or not fully onboarded; no transfer_data will be added.");
-    }
-
-    // IMPORTANT: Do not pass the `stripeAccount` option here because that would create the charge on behalf of the seller.
-    // Instead, create the session on your platform account.
     const session = await stripe.checkout.sessions.create(sessionParams);
     res.json({ url: session.url });
   } catch (error) {
@@ -128,7 +107,6 @@ app.post('/api/checkout-session', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 
 // --- Webhook endpoint for checkout session events ---
 // This endpoint listens for webhook events from Stripe to, for example, mark an item as purchased.
