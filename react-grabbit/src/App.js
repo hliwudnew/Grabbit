@@ -75,31 +75,6 @@ function App() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Profile Fetch failed:", errorData.message);
-        return;
-      }
-      const json = await response.json();
-      console.log("Response:", json);
-      setUser(json);
-      // Also store the full user info for later use
-      localStorage.setItem("user", JSON.stringify(json));
-    } catch (error) {
-      console.error("Request failed:", error);
-    }
-  }
-
-  async function requestWatchlist(token){
-    try{
-      const response = await fetch("http://localhost:5002/api/watchlists/", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
         console.error("Watchlist Fetch failed:", errorData.message);
         return;
       }
@@ -149,17 +124,20 @@ function App() {
           <EditWatchBadge.Provider value={setWatchIcon}>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/cart" element={<CartPage user={user} />} />
+              <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/account" element={<AccountPage user={user} callBack={setUser} />} />
               <Route path="/listings" element={<ListingsPage />} />
-              <Route path="/login" element={<LoginPage callBack={setUser} setWatch={setWatch} setWatchIcon={setWatchIcon} />} />
+              <Route path="/login" element={<LoginPage callBack={setUser} />} />
               <Route path="/my-listings" element={<MyListingsPage />} />
-              <Route path="/create-account" element={<CreateAccountPage callBack={setUser} setWatch={setWatch} setWatchIcon={setWatchIcon} />} />
+              <Route path="/create-account" element={<CreateAccountPage />} />
               <Route path="/notifications" element={<NotificationsPage />} />
-              <Route path="/messages" element={<MessagesPage user={user} />} />
+              <Route path="/messages" element={<MessagesPage />} />
               <Route path="/details" element={<DetailsPage user={user} />} />
               <Route path="/create" element={<PostPage />} />
+          <Route path="/success" element={<SuccessPage />} />
+          <Route path="/onboarding" element={<StripeOnboarding />} />
+          <Route path="/success" element={<SuccessPage />} />
               <Route path="/success" element={<SuccessPage />} />
               <Route path="/onboarding" element={<StripeOnboarding />} />
               <Route path="/success" element={<SuccessPage />} />

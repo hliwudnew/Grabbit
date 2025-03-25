@@ -99,65 +99,78 @@ function DetailsPage({ user }) {
     return `hsl(${hash}, ${saturation}%, ${lightness}%)`;
   }
 
-    return(
-        <div className="DetailsPage-container">
-            <div className="DetailsPage-holder">
-                <div className="DetailsPage-Img-holder">
-                    <img className="DetailsPage-Img" src={imageUrl} alt="item"></img>
-                </div>
-                <div className="DetailsPage-description">
-                    <h1>{item.title}</h1>
-                    <hr/>
-                    <h4>Key Details</h4>
-                    <ul>
-                        <li>Condition: {item.condition}</li>
-                        <li>Delivery: {item.delivery}</li>
-                    </ul>
-                    <h2>Description</h2>
-                    <p>{item.description}</p>
-                </div>
-                <div className="DetailsPage-order">
-                    <Avatar style={{backgroundColor: stringToHslColor(item.seller ? item.seller.username :"Adam Sandler" ,40,60)}}>{item.seller ? item.seller.username.substring(0,1) : "A"}</Avatar>
-                    <p>Sold by {item.seller ? item.seller.username : "Adam Sandler" }</p>
-                    <h2>${item.price}</h2>
-                    {
-                        item.delivery === "online"?
-                            <p>Shipping: Determined at checkout</p>
-                        :
-                        <p>Shipping: Local Pickup/Determined by Seller</p>
-                    }
-                    {
-                        user ?
-                            !(user._id === item.seller._id)?
-                            <>
-                                {
-                                    !(item.delivery === "in-person")?
-                                    <Button onClick={handlePurchase} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Purchase</Button>
-                                    :
-                                    <>
-                                    <ContactSeller receiverID={item.seller._id} senderName={user.username} receiverName={item.seller.username}  open={open} close={() => setOpen(false)}/>
-                                    <Button onClick={() => setOpen(true)} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Contact Seller</Button>
-                                    </>
-                                }
-                                {
-                                    added ? 
-                                    <Alert style={{marginBottom:"5%"}} icon={<CheckIcon fontSize="inherit" />} severity="success">Added to Your Watchlist</Alert> 
-                                    : 
-                                    <div style={{display:"flex", flexDirection:"column"}}>
-                                        <Button onClick={handleAdded} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Add to Watchlist</Button>
-                                    </div>
-                                }
-                            </>
-                            :
-                            //Add the remove your own listing here
-                            <Button onClick={handleRemoveLisiting} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">Remove Listing</Button>
-                        :
-                        <Button onClick={() => navigate("/login")} style={{backgroundColor:"#685BE0", color:"white"}}>Login to Purchase</Button>
-                    }
-                </div>
-            </div>
+  return (
+    <div className="DetailsPage-container">
+      <div className="DetailsPage-holder">
+        <div className="DetailsPage-Img-holder">
+          <img className="DetailsPage-Img" src={imageUrl} alt="item" />
         </div>
-    );
+        <div className="DetailsPage-description">
+          <h1>{item.title}</h1>
+          <hr />
+          <h4>Key Details</h4>
+          <ul>
+            <li>Condition: {item.condition}</li>
+            <li>Delivery: {item.delivery}</li>
+          </ul>
+          <h2>Description</h2>
+          <p>{item.description}</p>
+        </div>
+        <div className="DetailsPage-order">
+          <Avatar style={{ backgroundColor: stringToHslColor(item.seller ? item.seller.username : "Default", 40, 60) }}>
+            {item.seller ? item.seller.username.substring(0, 1) : "A"}
+          </Avatar>
+          <p>Sold by {item.seller ? item.seller.username : "Unknown"}</p>
+          <h2>${item.price}</h2>
+          <p>Shipping: $5 international or Free local</p>
+          {user ? (
+            user._id !== item.seller._id ? (
+              <>
+                {item.delivery !== "in-person" ? (
+                  <Button onClick={handlePurchase} style={{ backgroundColor: "#685BE0", margin: "5%" }} variant="contained">
+                    Purchase
+                  </Button>
+                ) : (
+                  <>
+                    <ContactSeller 
+                      receiverID={item.seller._id} 
+                      senderName={user.username} 
+                      receiverName={item.seller.username}  
+                      open={open} 
+                      close={() => setOpen(false)} 
+                    />
+                    <Button onClick={() => setOpen(true)} style={{ backgroundColor: "#685BE0", margin: "5%" }} variant="contained">
+                      Contact Seller
+                    </Button>
+                  </>
+                )}
+                {added ? (
+                  <Alert style={{ marginBottom: "5%" }} icon={<CheckIcon fontSize="inherit" />} severity="success">
+                    Added to Your Watchlist
+                  </Alert>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <Button onClick={handleAdded} style={{ backgroundColor: "#685BE0", margin: "5%" }} variant="contained">
+                      Add to Watchlist
+                    </Button>
+                  </div>
+                )}
+              </>
+            ) : (
+                //Add the remove your own listing here
+                <Button onClick={handleRemoveLisiting} style={{backgroundColor:"#685BE0", margin:"5%"}} variant="contained">
+                  Remove Listing
+                </Button>
+            )
+          ) : (
+            <Button onClick={() => navigate("/login")} style={{ backgroundColor: "#685BE0", color: "white" }}>
+              Login to Purchase
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default DetailsPage;
