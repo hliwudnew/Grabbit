@@ -1,0 +1,38 @@
+.MyListingsPage-content{
+    text-align: center;
+    height: 100%;
+    min-height: 100vh;
+}
+
+.MyListingsPage-holder{
+    display: flex;
+    justify-content: space-evenly;
+    height: 100%;
+}
+
+.MyListingsPage-Cart{
+    width: 50%;
+    height: 100%;
+}
+
+.MyListingsPage-Summary{
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    width: 25%;
+    height: fit-content;
+    background-color: white;
+    margin: 5%;
+    text-align: left;
+    display: grid;
+}
+
+.MyListingsPage-header{
+    text-align: left;
+    margin-left: 5%;
+    justify-content: left;
+}
+.MyListingsPage-tiles{
+    margin-top: 5%;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}

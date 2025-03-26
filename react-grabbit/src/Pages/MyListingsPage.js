@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import "../Styles/ListingsPage.css";
 import ListingTile from "../Components/ListingTile";
 import SortingSelect from "../Components/SortingSelect.js";
-
+import "../Styles/MyListingsPage.css";
 function MyListingsPage() {
   const [items, setItems] = useState([]);
   const location = useLocation();
@@ -56,23 +56,28 @@ function MyListingsPage() {
   }, [searchQuery, categoryQuery, user]);
 
   return (
-    <div className="ListingsPage-content">
-      <div className="ListingsPage-header">
-        <SortingSelect />
-      </div>
-      <div className="ListingsPage-bottom">
-        <div className="ListingsPage-filters">
-          <h2>Filters</h2>
-          {/* Additional filter UI elements if needed */}
-        </div>
-        <div className="ListingsPage-tiles">
-          {items.map((item) => (
-            <ListingTile key={item._id} data={item} />
-          ))}
-        </div>
+    <div className="MyListingsPage-content">
+      <div className="MyListingsPage-holder">
+          <div className="MyListingsPage-Cart">
+              <div className="MyListingsPage-header">
+                  <h1>Your Listings</h1>
+                  <hr style={{display:"block",margin:"0%",backgroundColor:"#685BE0", width:"70%",borderTop:"5px solid #685BE0"}}/>
+              </div>
+              <div className="MyListingsPage-tiles">
+                  {
+                    items ?
+                    items.map((item)=>{
+                        return(
+                          <ListingTile key={item._id} data={item}/>
+                        )
+                    })
+                    :
+                    console.log("Nothing inside your listings")
+                  }
+              </div>
+          </div>
       </div>
     </div>
   );
 }
-
 export default MyListingsPage;

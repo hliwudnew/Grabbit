@@ -60,7 +60,7 @@ function TaskBar({ cartIcon, user }) {
             src="./grabbit-cut.png"
             alt="logo"
           />
-          <h1>Grabbit</h1>
+          <h1 style={{cursor:"pointer"}} onClick={() => navigate("/")}>Grabbit</h1>
         </div>
         <div className="TaskBar-pages">
           <Button sx={{backgroundColor:"#685BE0"}} variant="contained" onClick={handleMyItems}>
