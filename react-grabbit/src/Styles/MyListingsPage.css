@@ -36,3 +36,17 @@
     flex-wrap: wrap;
     width: 100%;
 }
+
+.MyListingsPage-signin{
+    background-color: #685BE0;
+    color: white;
+    width: 50%;
+    height: 50%;
+    margin-left: 5%;
+    margin-top: 5%;
+    padding: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 4%;
+}

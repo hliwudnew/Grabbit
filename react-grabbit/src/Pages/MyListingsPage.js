@@ -5,7 +5,7 @@ import "../Styles/ListingsPage.css";
 import ListingTile from "../Components/ListingTile";
 import SortingSelect from "../Components/SortingSelect.js";
 import "../Styles/MyListingsPage.css";
-function MyListingsPage() {
+function MyListingsPage({userCheck}) {
   const [items, setItems] = useState([]);
   const location = useLocation();
 
@@ -63,18 +63,25 @@ function MyListingsPage() {
                   <h1>Your Listings</h1>
                   <hr style={{display:"block",margin:"0%",backgroundColor:"#685BE0", width:"70%",borderTop:"5px solid #685BE0"}}/>
               </div>
-              <div className="MyListingsPage-tiles">
-                  {
-                    items ?
-                    items.map((item)=>{
-                        return(
-                          <ListingTile key={item._id} data={item}/>
-                        )
-                    })
-                    :
-                    console.log("Nothing inside your listings")
-                  }
-              </div>
+              {
+                userCheck ?
+                  <div className="MyListingsPage-tiles">
+                      {
+                        items ?
+                        items.map((item)=>{
+                            return(
+                              <ListingTile key={item._id} data={item}/>
+                            )
+                        })
+                        :
+                        console.log("Nothing inside your listings")
+                      }
+                  </div>
+                :
+                <div className="MyListingsPage-signin">
+                  <h2>Create an account to create lisiting on our website!</h2>
+                </div>
+              }
           </div>
       </div>
     </div>

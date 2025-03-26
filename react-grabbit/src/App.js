@@ -128,9 +128,9 @@ function App() {
               <Route path="/cart" element={<CartPage user={user}/>}/>
               <Route path="/checkout" element={<CheckoutPage/>}/>
               <Route path="/account" element={<AccountPage user={user} callBack={setUser}/>}/>
-              <Route path ="/listings" element={<ListingsPage/>}/>
+              <Route path ="/listings" element={<ListingsPage userCheck={user}/>}/>
               <Route path ="/login" element={<LoginPage callBack={setUser} setWatch={setWatch} setWatchIcon={setWatchIcon}/>}/>
-              <Route path="/my-listings" element={<MyListingsPage/>}/>
+              <Route path="/my-listings" element={<MyListingsPage userCheck={user}/>}/>
               <Route path ="/create-account" element={<CreateAccountPage callBack={setUser} setWatch={setWatch} setWatchIcon={setWatchIcon}/>}/>
               <Route path ="/notifications" element={<NotificationsPage/>}/>
               <Route path ="/messages" element={<MessagesPage user={user}/>}/>

@@ -4,7 +4,7 @@ import "../Styles/ListingsPage.css";
 import ListingTile from "../Components/ListingTile";
 import SortingSelect from "../Components/SortingSelect.js";
 
-function ListingsPage() {
+function ListingsPage({userCheck}) {
   const [items, setItems] = useState([]);
   const location = useLocation();
 
@@ -20,7 +20,10 @@ function ListingsPage() {
   useEffect(() => {
     // Determine base URL: if a user is logged in, use the "others" endpoints
     let baseUrl;
-    if (user) {
+    /* New: the code for pulling the user data out of local doesnt work since the "others" endpoints are protected. 
+       So I passed user down from App.js which is always accurate. Didint wanna break your routes incase its needed that way
+    */
+    if (userCheck) {
       baseUrl =
         searchQuery || categoryQuery
           ? "http://localhost:5003/api/items/others/search"

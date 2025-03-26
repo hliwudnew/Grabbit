@@ -146,7 +146,7 @@ function PostPage() {
               >
                 <MenuItem value={"in-person"}>In-Person</MenuItem>
                 <MenuItem value={"online"}>Online</MenuItem>
-                <MenuItem value={"both"}>Both</MenuItem>
+                {/* <MenuItem value={"both"}>Both</MenuItem> */}
               </Select>
             </FormControl>
           </div>
