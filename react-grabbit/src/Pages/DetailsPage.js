@@ -88,7 +88,23 @@ function DetailsPage({ user }) {
   }
 
   async function handleRemoveLisiting() {
-    console.log("Remove from database");
+    const response = await fetch(`http://localhost:5003/api/items/${item._id}/purchase`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+      },
+    })
+
+    if(!response.ok){
+      const errorData = await response.json();
+      console.error("Remove Listing Fetch failed:", errorData.message);
+      return;
+    }
+    else{
+      navigate("/my-listings");
+    }
+
   }
 
   async function requestAddToWatchlist() {
@@ -107,7 +123,7 @@ function DetailsPage({ user }) {
 
       if (!response.ok) {
           const errorData = await response.json();
-          console.error("Add Vehicle Fetch failed:", errorData.message);
+          console.error("Add to Watchlist Fetch failed:", errorData.message);
           return;
       }
   

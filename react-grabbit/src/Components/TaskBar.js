@@ -12,7 +12,7 @@ import Badge, { badgeClasses } from "@mui/material/Badge";
 import { styled } from "@mui/material/styles";
 import TurnedInIcon from "@mui/icons-material/TurnedIn";
 import Avatar from "@mui/material/Avatar";
-
+import StoreIcon from '@mui/icons-material/Store';
 function TaskBar({ cartIcon, user }) {
   const navigate = useNavigate();
   const [badge, setBadge] = useState(0);
@@ -63,8 +63,9 @@ function TaskBar({ cartIcon, user }) {
           <h1>Grabbit</h1>
         </div>
         <div className="TaskBar-pages">
-          {/* Updated dropdown button now navigates to My Items for Sell */}
-          <button onClick={handleMyItems}>My Items for Sell</button>
+          <Button sx={{backgroundColor:"#685BE0"}} variant="contained" onClick={handleMyItems}>
+            <StoreIcon sx={{backgroundColor:"#685BE0"}}/>
+          </Button>
           <TextField
             size="small"
             style={{ width: "100%", borderRadius: "100%" }}
@@ -73,7 +74,7 @@ function TaskBar({ cartIcon, user }) {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <Button
-            style={{ color: "black", borderColor: "black" }}
+            style={{ color: "black", borderColor: "black", backgroundColor:"white"}}
             variant="outlined"
             onClick={handleSearch}
             className="page"
