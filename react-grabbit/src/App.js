@@ -80,7 +80,7 @@ function App() {
       }
 
       const json = await response.json();
-      //console.log("WatchList:", json);
+      //console.log(json);
       requestWatchlistItems(json.items)
     }
     catch(error){
@@ -90,6 +90,7 @@ function App() {
 
   async function requestWatchlistItems(items){
     try{
+      //console.log("Watch List Item IDs",items)
       const response = await fetch("http://localhost:5003/api/items/many", {
         method: "POST",
         headers: {
@@ -123,25 +124,22 @@ function App() {
         <EditWatchlist.Provider value={setWatch}>
           <EditWatchBadge.Provider value={setWatchIcon}>
             <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/checkout" element={<CheckoutPage />} />
-              <Route path="/account" element={<AccountPage user={user} callBack={setUser} />} />
-              <Route path="/listings" element={<ListingsPage />} />
-              <Route path="/login" element={<LoginPage callBack={setUser} />} />
-              <Route path="/my-listings" element={<MyListingsPage />} />
-              <Route path="/create-account" element={<CreateAccountPage />} />
-              <Route path="/notifications" element={<NotificationsPage />} />
-              <Route path="/messages" element={<MessagesPage />} />
-              <Route path="/details" element={<DetailsPage user={user} />} />
-              <Route path="/create" element={<PostPage />} />
-          <Route path="/success" element={<SuccessPage />} />
-          <Route path="/onboarding" element={<StripeOnboarding />} />
-          <Route path="/success" element={<SuccessPage />} />
+              <Route path="/" element={<HomePage/>} />
+              <Route path="/cart" element={<CartPage user={user}/>}/>
+              <Route path="/checkout" element={<CheckoutPage/>}/>
+              <Route path="/account" element={<AccountPage user={user} callBack={setUser}/>}/>
+              <Route path ="/listings" element={<ListingsPage/>}/>
+              <Route path ="/login" element={<LoginPage callBack={setUser} setWatch={setWatch} setWatchIcon={setWatchIcon}/>}/>
+              <Route path="/my-listings" element={<MyListingsPage/>}/>
+              <Route path ="/create-account" element={<CreateAccountPage callBack={setUser} setWatch={setWatch} setWatchIcon={setWatchIcon}/>}/>
+              <Route path ="/notifications" element={<NotificationsPage/>}/>
+              <Route path ="/messages" element={<MessagesPage user={user}/>}/>
+              <Route path = "/details" element={<DetailsPage user={user}/>}/>
+              <Route path ="/create" element={<PostPage/>}/>
               <Route path="/success" element={<SuccessPage />} />
               <Route path="/onboarding" element={<StripeOnboarding />} />
               <Route path="/success" element={<SuccessPage />} />
-              <Route path="/*" element={<ErrorPage />} />
+              <Route path="/*" element={<ErrorPage/>}/>
             </Routes>
           </EditWatchBadge.Provider>
         </EditWatchlist.Provider>

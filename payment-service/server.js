@@ -24,8 +24,8 @@ app.post("/api/account-link", async (req, res) => {
     }
     const accountLink = await stripe.accountLinks.create({
       account: account,
-      return_url: `${process.env.CLIENT_URL}/index.html`, // Ensure this starts with http:// or https://
-      refresh_url: `${process.env.CLIENT_URL}/index.html`,
+      return_url: `${process.env.CLIENT_URL}/`, // Ensure this starts with http:// or https://
+      refresh_url: `${process.env.CLIENT_URL}/`,
       type: "account_onboarding",
     });
     res.json(accountLink);

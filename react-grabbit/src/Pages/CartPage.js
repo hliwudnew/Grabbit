@@ -30,22 +30,6 @@ function CartPage({user}){
                         }
                     </div>
                 </div>
-                {/* <div className="CartPage-Summary">
-                    <div style={{paddingLeft:"5%"}}>
-                        {
-                            calculate()
-                        }
-                        <h1>Summary</h1>
-                        <p>Subtotal: ${Math.round(subtotal*100)/100}</p>
-                        <p>Shipping & Handling: ${Math.round(shipping*100)/100}</p>
-                        <p>Tax: ${Math.round(tax*100)/100}</p>
-                        <hr style={{display:"block",margin:"0%",marginTop:"5%",marginBottom:"5%",backgroundColor:"#685BE0", width:"90%",borderTop:"2px solid black"}}/>
-                        <h1>Total: ${total}</h1>
-                    </div>
-                    <div style={{display:"flex",textAlign:"center", alignItems:"center", justifyContent:"center"}}>
-                        <Button onClick={() => navigate("/checkout",{state: {data: cart, total: total}})} style={{backgroundColor:"#685BE0", marginBottom:"5%"}} variant="contained">Secure Checkout</Button>
-                    </div>
-                </div> */}
             </div>
         </div>
     );

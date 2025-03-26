@@ -51,6 +51,7 @@ function CartTile({user,data: item}){
 
     async function requestRemoveItemWatchlist(item){
         try{
+            //console.log(item._id)
             const token = localStorage.getItem("jwtToken");
             const response = await fetch("http://localhost:5002/api/watchlists/remove",{
                 method: "DELETE",

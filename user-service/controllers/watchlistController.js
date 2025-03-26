@@ -2,7 +2,7 @@ const Watchlist = require('../models/watchlist');
 
 exports.getWatchList = async (req, res) => {
     try {
-      const watchlist = await SomeModel.find({ userId: req.user._id });
+      const watchlist = await Watchlist.findOne({ userID: req.user.id});
       if (!watchlist) {
         return res.status(404).json({ message: "No watchlist found" });
       }
@@ -14,16 +14,17 @@ exports.getWatchList = async (req, res) => {
 
 exports.addToWatchList = async (req, res) => {
     try{
-        const watchlist = await Watchlist.findOne({userID:req.user._id})
-
+        const watchlist = await Watchlist.findOne({userID:req.user.id})
+        
         if(!watchlist){
             res.status(404).json({message:"Users Watchlist Not Found"})
         }
-
-        watchlist.items.push(req.body.itemID)
-        await watchlist.save()
-
-        res.status(200).json({message:"Successfully Watchlisted Item"});
+        else{
+            watchlist.items.push(req.body.itemID)
+            await watchlist.save()
+    
+            res.status(200).json({message:"Successfully Watchlisted Item"});   
+        }
     }
     catch(error){
         res.status(500).json({message:error.message})
@@ -32,7 +33,7 @@ exports.addToWatchList = async (req, res) => {
 
 exports.removeFromWatchList = async (req, res) => {
     try{
-        const watchlist = await Watchlist.findOne({userID:req.user._id})
+        const watchlist = await Watchlist.findOne({userID:req.user.id})
         var found = false;
 
         if(!watchlist){
@@ -52,9 +53,10 @@ exports.removeFromWatchList = async (req, res) => {
         if(!found){
             res.status(404).json({message:"Could not remove Item"})
         }
-        
-        watchlist.save()
-        res.status(200).json({message:"Successfully Removed Item"});
+        else{
+            watchlist.save()
+            res.status(200).json({message:"Successfully Removed Item"});
+        }
     }
     catch(error){
         res.status(500).json({message:error.message})
@@ -63,14 +65,14 @@ exports.removeFromWatchList = async (req, res) => {
 
 exports.createWatchList = async (req, res) => {
     try{
-        const watchlist = await Watchlist.findOne({userID:req.user._id})
+        const watchlist = await Watchlist.findOne({userID:req.user.id})
 
         if(watchlist){
             res.status(404).json({message:"User Already has a Watchlist"})
         }
 
         const newWatchlist = new Watchlist({
-            userID:req.user._id
+            userID:req.user.id
         })
 
         await newWatchlist.save();

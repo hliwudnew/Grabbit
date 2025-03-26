@@ -4,7 +4,7 @@ import "../Styles/DetailsPage.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import Alert from '@mui/material/Alert';
 import CheckIcon from '@mui/icons-material/Check';
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Avatar from '@mui/material/Avatar';
 import { EditWatchlist, Watchlist, EditWatchBadge } from "../App.js";
 import ContactSeller from "../Modals/ContactSeller.js";
@@ -25,14 +25,15 @@ function DetailsPage({ user }) {
 
   function handleAdded() {
     // Call any API to add to watchlist if needed
+    requestAddToWatchlist();
     setAdded(true);
     setWatch([...watch, item]);
     editBadge(watch.length + 1);
   }
 
-      //Runs each page refresh on the page
-    //Makes sure no dupe of wishlists
-    useEffect(() =>{
+  //Runs each page refresh on the page
+  //Makes sure no dupe of wishlists
+  useEffect(() =>{
       checkInWatch()    
   })
 
@@ -89,6 +90,34 @@ function DetailsPage({ user }) {
   async function handleRemoveLisiting() {
     console.log("Remove from database");
   }
+
+  async function requestAddToWatchlist() {
+    try{
+      const token = localStorage.getItem("jwtToken");
+      const response = await fetch("http://localhost:5002/api/watchlists/add",{
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+          },
+          body:JSON.stringify({
+              itemID:item._id
+          }),
+      });
+
+      if (!response.ok) {
+          const errorData = await response.json();
+          console.error("Add Vehicle Fetch failed:", errorData.message);
+          return;
+      }
+  
+      const json = await response.json();
+    }
+    catch(error){
+      console.error("Request failed:", error);
+    }
+  }
+
 
   function stringToHslColor(string, saturation, lightness) {
     let hash = 0;
