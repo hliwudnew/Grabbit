@@ -1,6 +1,8 @@
 // src/Components/StripeOnboarding.js
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import "../Styles/StripeOnboarding.css";
+import CircularProgress from '@mui/material/CircularProgress';
 
 function StripeOnboarding() {
   const [searchParams] = useSearchParams();
@@ -31,9 +33,12 @@ function StripeOnboarding() {
     onboard();
   }, [accountId]);
 
+  var imageUrl ="https://images.unsplash.com/photo-1589933767411-38a58367efd7?q=80&w=2058&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
   return (
-    <div>
+    <div className='StripeOnboarding-container'>
+      <img style={{width:"25%",height:"10%"}} src={imageUrl}></img>
       <p>Redirecting to Stripe onboarding...</p>
+      <CircularProgress sx={{color:"#685BE0"}}/>  
     </div>
   );
 }

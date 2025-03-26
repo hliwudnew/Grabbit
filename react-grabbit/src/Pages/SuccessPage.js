@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
-
+import "../Styles/SuccessPage.css";
 function SuccessPage() {
   const { search } = useLocation();
   const navigate = useNavigate();
@@ -47,10 +47,13 @@ function SuccessPage() {
       });
   }, [search]);
 
+  var imageUrl = "https://images.unsplash.com/photo-1587491273677-be8b7c944cd2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
   return (
-    <div style={{ padding: "2rem", textAlign: "center" }}>
+    <div className="SuccessPage-container">
+      <img style={{width:"50%",height:"50%"}} src={imageUrl}></img>
       <h1>{message}</h1>
-      <Button variant="contained" onClick={() => navigate("/")}>
+      <Button style={{ backgroundColor: "#685BE0"}} variant="contained" onClick={() => navigate("/")}>
         Back to Home
       </Button>
     </div>

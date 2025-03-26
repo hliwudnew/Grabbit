@@ -138,7 +138,6 @@ function App() {
               <Route path ="/create" element={<PostPage/>}/>
               <Route path="/success" element={<SuccessPage />} />
               <Route path="/onboarding" element={<StripeOnboarding />} />
-              <Route path="/success" element={<SuccessPage />} />
               <Route path="/*" element={<ErrorPage/>}/>
             </Routes>
           </EditWatchBadge.Provider>
