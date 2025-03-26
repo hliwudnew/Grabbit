@@ -41,13 +41,48 @@ function CartTile({user,data: item}){
         navigate("/details",{state: {data:item}})
     }
 
-    function handlePurchase(){
-        console.log("Send to Stripe API");
+
+    function handlePurchase() {
+        console.log("Send to stripe API");
         console.log("Item name:", item.title);
         console.log("Item cost:", item.price);
-
-        
+        console.log("Seller object:", item.seller);
+    
+        // Make sure the seller object includes stripeAccountId
+        if (!item.seller.stripeAccountId) {
+          console.error("Seller stripe account not set on this item.");
+          return;
+        }
+    
+        try {
+          fetch("http://localhost:5004/api/checkout-session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              title: item.title,
+              price: item.price,
+              itemId: item._id,
+              sellerAccount: item.seller.stripeAccountId  // Pass seller's stripe account ID
+            }),
+          })
+          .then((res) => {
+            if (!res.ok) {
+              return res.json().then(json => Promise.reject(json));
+            }
+            return res.json();
+          })
+          .then(({ url }) => {
+            handleRemove();
+            window.location.href = url;
+          })
+          .catch((e) => {
+            console.error(e.error);
+          });
+        } catch (error) {
+          console.error("Payment request failed:", error);
+        }
     }
+    
 
     async function requestRemoveItemWatchlist(item){
         try{
