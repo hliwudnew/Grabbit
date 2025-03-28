@@ -104,7 +104,7 @@ const getBuyerItems = async (req, res) => {
 // Public search for items
 const searchItems = async (req, res) => {
   try {
-    const { q, minPrice, maxPrice, category } = req.query;
+    const { q, minPrice, maxPrice, category, condition, delivery } = req.query;
     let filter = { purchased: false };
     if (q) {
       filter.$or = [
@@ -119,6 +119,12 @@ const searchItems = async (req, res) => {
     }
     if (category) {
       filter.category = category;
+    }
+    if(condition){
+      filter.condition = condition;
+    }
+    if(delivery){
+      filter.delivery = delivery;
     }
     const items = await Item.find(filter);
     res.json(items);
@@ -148,7 +154,7 @@ const markItemAsSold = async (req, res) => {
 // Search for items not listed by the current user ("others" search)
 const searchOtherItems = async (req, res) => {
   try {
-    const { q, minPrice, maxPrice, category } = req.query;
+    const { q, minPrice, maxPrice, category , condition, delivery} = req.query;
     let filter = { purchased: false, "seller._id": { $ne: req.user.id } };
     if (q) {
       filter.$or = [
@@ -163,6 +169,12 @@ const searchOtherItems = async (req, res) => {
     }
     if (category) {
       filter.category = category;
+    }
+    if(condition){
+      filter.condition = condition;
+    }
+    if(delivery){
+      filter.delivery = delivery;
     }
     console.log("Filter for others search:", filter);
     const items = await Item.find(filter).populate('seller', 'username email');

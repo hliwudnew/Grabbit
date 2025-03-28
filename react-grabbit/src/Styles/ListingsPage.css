@@ -27,11 +27,15 @@
 }
 
 .ListingsPage-filters{
-    border: 2px solid grey;
+    border: 2px solid rgb(219, 219, 219);;
     max-width: 25%;
     min-width: 15%;
     margin-right: 5%;
     background-color: white;
+    padding: 1%;
+    height: fit-content;
+    color:#685BE0;
+    text-align: left;
 }
 
 .ListingsPage-bottom{
