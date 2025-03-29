@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "../Styles/ListingsPage.css";
 import ListingTile from "../Components/ListingTile";
-import SortingSelect from "../Components/SortingSelect.js";
+import Box from '@mui/material/Box';
 import { Button, TextField, Select, MenuItem, InputLabel, FormControl, Alert } from "@mui/material";
 function ListingsPage({userCheck}) {
   const [items, setItems] = useState([]);
+  const [sorted,setSorted] = useState([]);
+  const [sort,setSort] = useState("Newest");
   const location = useLocation();
 
   const [delivery,setDelivery]= useState("");
@@ -91,6 +93,11 @@ function ListingsPage({userCheck}) {
       });
   }, [searchQuery, categoryQuery, user]);
 
+  useEffect(()=> {
+    setSorted([]);
+    setSort("Newest");
+  },[delivery,condition,category,minPrice,maxPrice])
+
   async function handleFilterClear(){
     setDelivery("");
     setCategory("");
@@ -99,10 +106,65 @@ function ListingsPage({userCheck}) {
     setMaxPrice(0);
   }
 
+  function sortListings(sortBy){
+    var array = items.slice();
+    if(sortBy === "Ascending Prices"){
+      console.log("Ascending Prices");
+      for(let i = 0; i < items.length -1; i++){
+          for(let k = 0; k < items.length - i - 1; k++){
+              if(parseInt(array[k].price) > parseInt(array[k+1].price)){
+                var holder = array[k];
+                array[k] = array[k+1];
+                array[k+1] = holder;
+              }
+          }
+      }
+      setSorted(array);
+    }
+    else if(sortBy === "Descending Prices"){
+      console.log("Descending Prices");
+      for(let i = 0; i < items.length -1; i++){
+          for(let k = 0; k < items.length - i - 1; k++){
+              if(parseInt(array[k].price) < parseInt(array[k+1].price)){
+                var holder = array[k];
+                array[k] = array[k+1];
+                array[k+1] = holder;
+              }
+          }
+      }
+      setSorted(array);
+    }
+    else{
+      //Default Newest (How it comes from DB), with filters before sorting
+      setSorted([]);
+    }
+  }
+
+  const handleSort = (event) => {
+    setSort(event.target.value);
+    sortListings(event.target.value);
+  };
+
   return (
     <div className="ListingsPage-content">
       <div className="ListingsPage-header">
-        <SortingSelect />
+        <Box style={{width:"12rem", textAlign:"center"}}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Sort</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={sort}
+              label="Sort"
+              onChange={handleSort}
+            >
+              {/* <MenuItem value={"No Sorting"}>No Sorting</MenuItem> */}
+              <MenuItem value={"Newest"}>Newest</MenuItem>
+              <MenuItem value={"Ascending Prices"}>Ascending Prices</MenuItem>
+              <MenuItem value={"Descending Prices"}>Descending Prices</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </div>
       <div className="ListingsPage-bottom">
         <div className="ListingsPage-filters">
@@ -177,7 +239,7 @@ function ListingsPage({userCheck}) {
           </div>
         </div>
         <div className="ListingsPage-tiles">
-          {items.map((item) => (
+          {(sorted.length>0? sorted : items).map((item) => (
             <ListingTile key={item._id} data={item} />
           ))}
         </div>
